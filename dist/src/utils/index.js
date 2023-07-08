@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetPasswordmailHtml = exports.mailsent = exports.transporter = void 0;
 const nodemailer = require("nodemailer");
-require('dotenv').config();
+require("dotenv").config();
 const user = process.env.GmailUser;
 const pass = process.env.GmailPass;
 exports.transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
         user: user,
         pass: pass,

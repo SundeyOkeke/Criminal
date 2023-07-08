@@ -23,8 +23,9 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
-import { AuthService } from './auth.service';
-import { AppointCommDto, LoginDto, RegisterDto } from './dto/user.dto';
+import { AuthService } from "./auth.service";
+import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { CategoryWeaponDto, WeaponDto } from "src/weapons/dto/weapons.dto";
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
@@ -46,4 +47,8 @@ export declare class AuthController {
     appointBattalionComm(req: any, data: AppointCommDto): Promise<{
         message: string;
     }>;
+    registerWeapon(req: any, data: WeaponDto): Promise<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
+    getWeapons(req: any, data: CategoryWeaponDto): Promise<any[]>;
 }

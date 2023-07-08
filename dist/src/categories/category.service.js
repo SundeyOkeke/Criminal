@@ -29,7 +29,7 @@ let CategoryService = class CategoryService {
         if (!category) {
             throw new common_1.NotFoundException("Category not found");
         }
-        const unit = await this.UnitModel.create(Object.assign(Object.assign({}, data), { category: category._id }));
+        const unit = (await this.UnitModel.create(Object.assign(Object.assign({}, data), { category: category._id })));
         category.units.push(unit);
         await category.save();
         return unit;

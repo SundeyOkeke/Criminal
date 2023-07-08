@@ -17,27 +17,30 @@ const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./jwt.strategy");
 const user_schema_1 = require("./schema/user.schema");
 const category_module_1 = require("../categories/category.module");
+const weapons_module_1 = require("../weapons/weapons.module");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
+            passport_1.PassportModule.register({ defaultStrategy: "jwt" }),
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
                 useFactory: (config) => {
                     return {
-                        secret: config.get('JWT_SECRET'),
-                        signOptions: { expiresIn: config.get('JWT_EXPIRES'),
-                        }
+                        secret: config.get("JWT_SECRET"),
+                        signOptions: {
+                            expiresIn: config.get("JWT_EXPIRES"),
+                        },
                     };
-                }
+                },
             }),
             mongoose_1.MongooseModule.forFeature([{ name: "User", schema: user_schema_1.UserSchema }]),
-            category_module_1.CategoryModule
+            category_module_1.CategoryModule,
+            weapons_module_1.WeaponModule,
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy]
+        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

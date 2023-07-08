@@ -22,8 +22,8 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Document } from 'mongoose';
-import { Unit } from 'src/categories/schema/unit.schema';
+import { Document } from "mongoose";
+import { Unit } from "src/categories/schema/unit.schema";
 export declare enum UserRole {
     UnitMember = "unit member",
     UnitCommander = "unit commander",

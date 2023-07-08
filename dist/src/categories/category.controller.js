@@ -34,33 +34,33 @@ let CategoryController = class CategoryController {
     }
 };
 __decorate([
-    (0, common_1.Post)('/create/category'),
+    (0, common_1.Post)("/create/category"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [category_dto_1.CategoryDto]),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "createCategory", null);
 __decorate([
-    (0, common_1.Post)('/create/unit'),
+    (0, common_1.Post)("/create/unit"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [category_dto_1.CategoryDto]),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "createUnit", null);
 __decorate([
-    (0, common_1.Get)('/get/units'),
+    (0, common_1.Get)("/get/units"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "getUnits", null);
 __decorate([
-    (0, common_1.Get)('/get/categories'),
+    (0, common_1.Get)("/get/categories"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "getCategories", null);
 CategoryController = __decorate([
-    (0, common_1.Controller)('category'),
+    (0, common_1.Controller)("category"),
     __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], CategoryController);
 exports.CategoryController = CategoryController;

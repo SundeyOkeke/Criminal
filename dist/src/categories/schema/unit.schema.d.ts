@@ -22,17 +22,18 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Document, Types } from 'mongoose';
-import { Category } from './category.schema';
-import { User } from 'src/user/schema/user.schema';
+import { Document, Types } from "mongoose";
+import { Category } from "./category.schema";
+import { User } from "src/user/schema/user.schema";
 export declare class Unit {
     name: string;
     category: Category;
     users: User[];
+    _id: Types.ObjectId;
 }
 export type UnitDocument = Unit & Document;
-export declare const UnitSchema: import("mongoose").Schema<Unit, import("mongoose").Model<Unit, any, any, any, Document<unknown, any, Unit> & Omit<Unit & {
+export declare const UnitSchema: import("mongoose").Schema<Unit, import("mongoose").Model<Unit, any, any, any, Document<unknown, any, Unit> & Omit<Unit & Required<{
     _id: Types.ObjectId;
-}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Unit, Document<unknown, {}, import("mongoose").FlatRecord<Unit>> & Omit<import("mongoose").FlatRecord<Unit> & {
+}>, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Unit, Document<unknown, {}, import("mongoose").FlatRecord<Unit>> & Omit<import("mongoose").FlatRecord<Unit> & Required<{
     _id: Types.ObjectId;
-}, never>>;
+}>, never>>;

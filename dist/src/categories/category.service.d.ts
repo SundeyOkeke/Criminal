@@ -24,7 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Model } from "mongoose";
 import { Category } from "./schema/category.schema";
-import { Unit } from "./schema/unit.schema";
+import { Unit, UnitDocument } from "./schema/unit.schema";
 import { CategoryDto } from "./dto/category.dto";
 export declare class CategoryService {
     private categoryModel;
@@ -33,16 +33,14 @@ export declare class CategoryService {
     createCategory(data: any): Promise<import("mongoose").Document<unknown, {}, Category> & Omit<Category & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
-    createUnit(data: CategoryDto): Promise<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & {
-        _id: import("mongoose").Types.ObjectId;
-    }, never>>;
+    createUnit(data: CategoryDto): Promise<UnitDocument>;
     getCategories(): Promise<Omit<import("mongoose").Document<unknown, {}, Category> & Omit<Category & {
         _id: import("mongoose").Types.ObjectId;
     }, never>, never>[]>;
-    getUnits(): Promise<Omit<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & {
+    getUnits(): Promise<Omit<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & Required<{
         _id: import("mongoose").Types.ObjectId;
-    }, never>, never>[]>;
-    findOneUnit(unit: any): Promise<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & {
+    }>, never>, never>[]>;
+    findOneUnit(unit: any): Promise<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & Required<{
         _id: import("mongoose").Types.ObjectId;
-    }, never>>;
+    }>, never>>;
 }

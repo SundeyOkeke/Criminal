@@ -22,8 +22,8 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Document, Types } from 'mongoose';
-import { Unit } from './unit.schema';
+import { Document, Types } from "mongoose";
+import { Unit } from "./unit.schema";
 export declare class Category {
     name: string;
     units: Unit[];

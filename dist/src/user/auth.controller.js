@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const user_dto_1 = require("./dto/user.dto");
 const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
+const weapons_dto_1 = require("../weapons/dto/weapons.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -39,23 +40,31 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.appointBattalionComm(id, data);
     }
+    registerWeapon(req, data) {
+        const id = req.user.id;
+        return this.authService.registerWeapon(id, data);
+    }
+    getWeapons(req, data) {
+        const id = req.user.id;
+        return this.authService.getWeapons(id, data);
+    }
 };
 __decorate([
-    (0, common_1.Post)('/register'),
+    (0, common_1.Post)("/register"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.RegisterDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, common_1.Post)('/login'),
+    (0, common_1.Post)("/login"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Put)('/appoint/division/comm'),
+    (0, common_1.Put)("/appoint/division/comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
@@ -64,7 +73,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointDivisionComm", null);
 __decorate([
-    (0, common_1.Put)('/appoint/brigade/comm'),
+    (0, common_1.Put)("/appoint/brigade/comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
@@ -73,7 +82,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBrigadeComm", null);
 __decorate([
-    (0, common_1.Put)('/appoint/battalion/comm'),
+    (0, common_1.Put)("/appoint/battalion/comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
@@ -81,8 +90,26 @@ __decorate([
     __metadata("design:paramtypes", [Object, user_dto_1.AppointCommDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBattalionComm", null);
+__decorate([
+    (0, common_1.Post)("/register/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.WeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "registerWeapon", null);
+__decorate([
+    (0, common_1.Get)("/get/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.CategoryWeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getWeapons", null);
 AuthController = __decorate([
-    (0, common_1.Controller)('user'),
+    (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;

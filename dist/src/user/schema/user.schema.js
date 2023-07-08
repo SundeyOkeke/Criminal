@@ -28,11 +28,11 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ unique: [true, 'Service Number exists'] }),
+    (0, mongoose_1.Prop)({ unique: [true, "Service Number exists"] }),
     __metadata("design:type", String)
 ], User.prototype, "serviceNumber", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.SchemaTypes.ObjectId, ref: 'Unit' }),
+    (0, mongoose_1.Prop)({ type: mongoose_2.SchemaTypes.ObjectId, ref: "Unit" }),
     __metadata("design:type", unit_schema_1.Unit)
 ], User.prototype, "unit", void 0);
 __decorate([

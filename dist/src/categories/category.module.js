@@ -18,11 +18,14 @@ let CategoryModule = class CategoryModule {
 CategoryModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: "Category", schema: category_schema_1.CategorySchema }, { name: "Unit", schema: unit_schema_1.UnitSchema }])
+            mongoose_1.MongooseModule.forFeature([
+                { name: "Category", schema: category_schema_1.CategorySchema },
+                { name: "Unit", schema: unit_schema_1.UnitSchema },
+            ]),
         ],
         controllers: [category_controller_1.CategoryController],
         exports: [category_service_1.CategoryService],
-        providers: [category_service_1.CategoryService]
+        providers: [category_service_1.CategoryService],
     })
 ], CategoryModule);
 exports.CategoryModule = CategoryModule;

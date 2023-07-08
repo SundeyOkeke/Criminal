@@ -23,20 +23,18 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
-import { CategoryService } from './category.service';
-import { CategoryDto } from './dto/category.dto';
+import { CategoryService } from "./category.service";
+import { CategoryDto } from "./dto/category.dto";
 export declare class CategoryController {
     private categoryService;
     constructor(categoryService: CategoryService);
     createCategory(data: CategoryDto): Promise<import("mongoose").Document<unknown, {}, import("./schema/category.schema").Category> & Omit<import("./schema/category.schema").Category & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
-    createUnit(data: CategoryDto): Promise<import("mongoose").Document<unknown, {}, import("./schema/unit.schema").Unit> & Omit<import("./schema/unit.schema").Unit & {
+    createUnit(data: CategoryDto): Promise<import("./schema/unit.schema").UnitDocument>;
+    getUnits(): Promise<Omit<import("mongoose").Document<unknown, {}, import("./schema/unit.schema").Unit> & Omit<import("./schema/unit.schema").Unit & Required<{
         _id: import("mongoose").Types.ObjectId;
-    }, never>>;
-    getUnits(): Promise<Omit<import("mongoose").Document<unknown, {}, import("./schema/unit.schema").Unit> & Omit<import("./schema/unit.schema").Unit & {
-        _id: import("mongoose").Types.ObjectId;
-    }, never>, never>[]>;
+    }>, never>, never>[]>;
     getCategories(): Promise<Omit<import("mongoose").Document<unknown, {}, import("./schema/category.schema").Category> & Omit<import("./schema/category.schema").Category & {
         _id: import("mongoose").Types.ObjectId;
     }, never>, never>[]>;

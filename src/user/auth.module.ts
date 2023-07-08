@@ -1,34 +1,38 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
-import { PassportModule } from '@nestjs/passport';
-import mongoose from 'mongoose';
-import { config } from 'process';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
-import { UserSchema } from './schema/user.schema';
-import { CategoryModule } from 'src/categories/category.module';
-import { UnitSchema } from 'src/categories/schema/unit.schema';
+import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
+import { MongooseModule } from "@nestjs/mongoose";
+import { PassportModule } from "@nestjs/passport";
+import mongoose from "mongoose";
+import { config } from "process";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
+import { JwtStrategy } from "./jwt.strategy";
+import { UserSchema } from "./schema/user.schema";
+import { CategoryModule } from "src/categories/category.module";
+import { UnitSchema } from "src/categories/schema/unit.schema";
+import { Weapon, WeaponSchema } from "src/weapons/schema/weapons.schema";
+import { WeaponModule } from "src/weapons/weapons.module";
 
 @Module({
-  imports:[
-    PassportModule.register({defaultStrategy: 'jwt'}), 
+  imports: [
+    PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.registerAsync({
-         inject: [ConfigService],
-         useFactory:(config:ConfigService)=>{
-            return{
-              secret: config.get<string>('JWT_SECRET'),
-              signOptions:{ expiresIn: config.get<string | number>('JWT_EXPIRES'),
-            }
-          }
-        }
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>("JWT_SECRET"),
+          signOptions: {
+            expiresIn: config.get<string | number>("JWT_EXPIRES"),
+          },
+        };
+      },
     }),
-    MongooseModule.forFeature([{name: "User", schema: UserSchema}]),
-    CategoryModule
+    MongooseModule.forFeature([{ name: "User", schema: UserSchema }]),
+    CategoryModule,
+    WeaponModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy ]
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

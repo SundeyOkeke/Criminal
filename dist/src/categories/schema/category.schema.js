@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", String)
 ], Category.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Unit' }] }),
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: "Unit" }] }),
     __metadata("design:type", Array)
 ], Category.prototype, "units", void 0);
 Category = __decorate([

@@ -1,43 +1,64 @@
-import { Body, Controller, Post, Param, Put, UseGuards, Req } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AppointCommDto, LoginDto, RegisterDto } from './dto/user.dto';
-import { JwtAuthGuard } from 'guards/jwt-auth.guard';
+import {
+  Body,
+  Controller,
+  Post,
+  Param,
+  Put,
+  UseGuards,
+  Req,
+  Get,
+} from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { JwtAuthGuard } from "guards/jwt-auth.guard";
+import { CategoryWeaponDto, WeaponDto } from "src/weapons/dto/weapons.dto";
 
-
-@Controller('user')
+@Controller("user")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/register')
+  @Post("/register")
   register(@Body() data: RegisterDto) {
     return this.authService.register(data);
   }
 
-  @Post('/login')
+  @Post("/login")
   login(@Body() data: LoginDto) {
     return this.authService.login(data);
   }
 
-  @Put('/appoint/division/comm')
+  @Put("/appoint/division/comm")
   @UseGuards(JwtAuthGuard)
-  appointDivisionComm( @Req() req, @Body() data: AppointCommDto) {
+  appointDivisionComm(@Req() req, @Body() data: AppointCommDto) {
     const id: string = req.user.id;
     return this.authService.appointDivisionComm(id, data);
   }
 
-  @Put('/appoint/brigade/comm')
+  @Put("/appoint/brigade/comm")
   @UseGuards(JwtAuthGuard)
-  appointBrigadeComm( @Req() req, @Body() data: AppointCommDto) {
+  appointBrigadeComm(@Req() req, @Body() data: AppointCommDto) {
     const id: string = req.user.id;
     return this.authService.appointBrigadeComm(id, data);
   }
 
-  @Put('/appoint/battalion/comm')
+  @Put("/appoint/battalion/comm")
   @UseGuards(JwtAuthGuard)
-  appointBattalionComm( @Req() req, @Body() data: AppointCommDto) {
+  appointBattalionComm(@Req() req, @Body() data: AppointCommDto) {
     const id: string = req.user.id;
     return this.authService.appointBattalionComm(id, data);
   }
 
-  
+  @Post("/register/weapon")
+  @UseGuards(JwtAuthGuard)
+  registerWeapon(@Req() req, @Body() data: WeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.registerWeapon(id, data);
+  }
+
+  @Get("/get/weapon")
+  @UseGuards(JwtAuthGuard)
+  getWeapons(@Req() req, @Body() data: CategoryWeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.getWeapons(id, data);
+  }
 }

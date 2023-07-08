@@ -20,11 +20,11 @@ __decorate([
     __metadata("design:type", String)
 ], Unit.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'Category' }),
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: "Category" }),
     __metadata("design:type", category_schema_1.Category)
 ], Unit.prototype, "category", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'User' }] }),
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: "User" }] }),
     __metadata("design:type", Array)
 ], Unit.prototype, "users", void 0);
 Unit = __decorate([

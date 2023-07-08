@@ -14,6 +14,7 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./user/auth.module");
 const category_module_1 = require("./categories/category.module");
+const weapons_module_1 = require("./weapons/weapons.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -21,11 +22,12 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 envFilePath: ".env",
-                isGlobal: true
+                isGlobal: true,
             }),
             mongoose_1.MongooseModule.forRoot(process.env.DB_URI),
             auth_module_1.AuthModule,
-            category_module_1.CategoryModule
+            category_module_1.CategoryModule,
+            weapons_module_1.WeaponModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

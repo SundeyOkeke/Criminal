@@ -27,11 +27,15 @@ import { User } from "./schema/user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { CategoryService } from "src/categories/category.service";
 import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { WeaponDto } from "src/weapons/dto/weapons.dto";
+import { Weapon } from "src/weapons/schema/weapons.schema";
+import { WeaponsService } from "src/weapons/weapons.service";
 export declare class AuthService {
     private userModel;
     private jwtService;
     private categoryService;
-    constructor(userModel: Model<User>, jwtService: JwtService, categoryService: CategoryService);
+    private weaponsService;
+    constructor(userModel: Model<User>, jwtService: JwtService, categoryService: CategoryService, weaponsService: WeaponsService);
     register(data: RegisterDto): Promise<import("mongoose").Document<unknown, {}, User> & Omit<User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
@@ -50,5 +54,9 @@ export declare class AuthService {
     appointBattalionComm(id: any, data: AppointCommDto): Promise<{
         message: string;
     }>;
+    registerWeapon(id: any, weaponData: WeaponDto): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
+    getWeapons(id: any, data: any): Promise<any[]>;
     decodeToken(token: string): Promise<any>;
 }

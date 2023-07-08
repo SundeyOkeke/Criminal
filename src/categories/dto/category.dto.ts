@@ -1,12 +1,11 @@
-import {IsNotEmpty, IsString, IsEmail, MinLength} from "class-validator";
+import { IsNotEmpty, IsString, IsEmail, MinLength } from "class-validator";
 
-export class CategoryDto{
-    @IsString()
-    @IsNotEmpty()
-    readonly name: string;
+export class CategoryDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly name: string;
 
-    @IsString()
-    @IsNotEmpty()
-    readonly categoryId: string;
-    
-} 
+  @IsString()
+  @IsNotEmpty()
+  readonly categoryId: string;
+}
