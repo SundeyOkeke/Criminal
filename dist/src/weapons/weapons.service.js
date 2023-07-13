@@ -16,6 +16,8 @@ exports.WeaponsService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const weapons_schema_1 = require("./schema/weapons.schema");
+const utils_1 = require("../utils/utils");
 let WeaponsService = class WeaponsService {
     constructor(weaponModel) {
         this.weaponModel = weaponModel;
@@ -25,7 +27,12 @@ let WeaponsService = class WeaponsService {
         console.log(unitId);
         return await this.weaponModel.create(Object.assign(Object.assign({}, weaponData), { unit: unitId }));
     }
-    async getWeapons(commanderData) {
+    async getWeaponsByUnitMem(commanderData) {
+        const { unitId } = commanderData;
+        console.log(unitId);
+        return await this.weaponModel.find({ unit: unitId, availability: "available" });
+    }
+    async getWeaponsByUnitComm(commanderData) {
         const { unitId } = commanderData;
         console.log(unitId);
         return await this.weaponModel.find({ unit: unitId });
@@ -162,6 +169,21 @@ let WeaponsService = class WeaponsService {
                 },
             },
         ]);
+    }
+    async signoutWeapon(user, data) {
+        const { weaponId, returnDate } = data;
+        const { _id: userId } = user;
+        const updateData = {
+            user: userId,
+            signoutDate: new Date(),
+            signinDate: (0, utils_1.convertDateFormat)(returnDate)
+        };
+        const signoutWeapon = await this.weaponModel.findByIdAndUpdate(weaponId, { $push: { users: updateData }, availability: weapons_schema_1.Availability.SignedOut }, { new: true });
+        console.log(signoutWeapon);
+        return signoutWeapon;
+    }
+    async getWeaponById(id) {
+        return await this.weaponModel.findById(id).populate("unit");
     }
 };
 WeaponsService = __decorate([

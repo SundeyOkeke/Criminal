@@ -5,7 +5,8 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Weapon } from "./schema/weapons.schema";
+import { Availability, Weapon } from "./schema/weapons.schema";
+import { convertDateFormat } from "src/utils/utils";
 
 @Injectable()
 export class WeaponsService {
@@ -17,7 +18,13 @@ export class WeaponsService {
     return await this.weaponModel.create({ ...weaponData, unit: unitId });
   }
 
-  async getWeapons(commanderData) {
+  async getWeaponsByUnitMem(commanderData) {
+    const { unitId } = commanderData;
+    console.log(unitId);
+    return await this.weaponModel.find({ unit: unitId, availability: "available" }) 
+   }
+
+  async getWeaponsByUnitComm(commanderData) {
     const { unitId } = commanderData;
     console.log(unitId);
     return await this.weaponModel.find({ unit: unitId });
@@ -158,13 +165,29 @@ export class WeaponsService {
     ]);
   }
 
-  // async getCategories() {
-  //   return await this.categoryModel.find().populate("units");
-  // }
+  async signoutWeapon(user, data) {
+    const { weaponId, returnDate } = data;
+    const { _id: userId } = user;
 
-  // async getUnits() {
-  //   return await this.UnitModel.find().populate("category");
-  // }
+  
+    const updateData = {
+      user: userId,
+      signoutDate: new Date(),
+      signinDate: convertDateFormat(returnDate)
+    };
+  
+    const signoutWeapon = await this.weaponModel.findByIdAndUpdate(
+      weaponId,
+      { $push: { users: updateData }, availability:Availability.SignedOut  },
+      { new: true }
+    );
+    console.log(signoutWeapon)
+    return signoutWeapon
+  }
+
+  async getWeaponById(id) {
+    return await this.weaponModel.findById(id).populate("unit");
+  }
 
   // async findOneUnit(unit) {
   //   const findunit = await this.UnitModel.findById(unit).populate("category");

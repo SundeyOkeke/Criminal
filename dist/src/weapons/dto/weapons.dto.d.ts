@@ -7,3 +7,7 @@ export declare class WeaponDto {
 export declare class CategoryWeaponDto {
     readonly categoryName: string;
 }
+export declare class signoutWeaponDto {
+    readonly weaponId: string;
+    readonly returnDate: string;
+}

@@ -23,3 +23,13 @@ export class CategoryWeaponDto {
   @IsNotEmpty()
   readonly categoryName: string;
 }
+
+export class signoutWeaponDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly weaponId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly returnDate: string;
+}

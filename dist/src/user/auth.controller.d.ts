@@ -25,10 +25,12 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { AuthService } from "./auth.service";
 import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
-import { CategoryWeaponDto, WeaponDto } from "src/weapons/dto/weapons.dto";
+import { CategoryWeaponDto, WeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
+import { WeaponsService } from "src/weapons/weapons.service";
 export declare class AuthController {
     private authService;
-    constructor(authService: AuthService);
+    private weaponsService;
+    constructor(authService: AuthService, weaponsService: WeaponsService);
     register(data: RegisterDto): Promise<import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
@@ -51,4 +53,10 @@ export declare class AuthController {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     getWeapons(req: any, data: CategoryWeaponDto): Promise<any[]>;
+    signoutWeapon(req: any, data: signoutWeaponDto): Promise<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
+    getUserById(req: any): Promise<import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
 }

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, SchemaTypes, Types } from "mongoose";
 import { Unit } from "src/categories/schema/unit.schema";
+import { User } from "src/user/schema/user.schema";
 
 export enum Availability {
   Available = "available",
@@ -26,6 +27,12 @@ export class Weapon {
 
   @Prop({ type: SchemaTypes.ObjectId, ref: "Unit" })
   unit: Unit;
+
+  @Prop({
+    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date }],
+    default: [],
+  })
+  users: { user: Types.ObjectId | User; signoutDate: Date; signinDate: Date }[];
 }
 
 export type WeaponDocument = Weapon & Document;

@@ -44,6 +44,13 @@ __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.SchemaTypes.ObjectId, ref: "Unit" }),
     __metadata("design:type", unit_schema_1.Unit)
 ], Weapon.prototype, "unit", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date }],
+        default: [],
+    }),
+    __metadata("design:type", Array)
+], Weapon.prototype, "users", void 0);
 Weapon = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], Weapon);

@@ -130,12 +130,17 @@ let AuthService = class AuthService {
     }
     async getWeapons(id, data) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "unit commander" || user.role === "unit member") {
+        if (user.role === "unit member") {
+            const userData = {
+                unitId: user.unit._id,
+            };
+            return await this.weaponsService.getWeaponsByUnitMem(userData);
+        }
+        if (user.role === "unit commander") {
             const commanderData = {
                 unitId: user.unit._id,
             };
-            console.log(commanderData);
-            return await this.weaponsService.getWeapons(commanderData);
+            return await this.weaponsService.getWeaponsByUnitComm(commanderData);
         }
         if (user.role === "brigade commander") {
             return await this.weaponsService.getWeaponsByBrigadeComm(data);
@@ -143,6 +148,18 @@ let AuthService = class AuthService {
         if (user.role === "division commander") {
             return await this.weaponsService.getWeaponsByDivisionComm(data);
         }
+    }
+    async signoutWeapon(id, data) {
+        const { weaponId, returnDate } = data;
+        const user = await this.userModel.findById(id).populate("unit");
+        const weapon = await this.weaponsService.getWeaponById(weaponId);
+        console.log(user.unit._id);
+        console.log(weapon.unit._id);
+        if (user.unit._id.toString() === weapon.unit._id.toString()) {
+            console.log("hey");
+            return await this.weaponsService.signoutWeapon(user, data);
+        }
+        throw new common_1.UnauthorizedException("Unauthorised");
     }
     async decodeToken(token) {
         try {
@@ -153,6 +170,9 @@ let AuthService = class AuthService {
             console.error(err);
             return null;
         }
+    }
+    async getUserById(id) {
+        return await this.userModel.findById(id).populate("unit");
     }
 };
 AuthService = __decorate([

@@ -58,5 +58,11 @@ export declare class AuthService {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     getWeapons(id: any, data: any): Promise<any[]>;
+    signoutWeapon(id: any, data: any): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
     decodeToken(token: string): Promise<any>;
+    getUserById(id: any): Promise<import("mongoose").Document<unknown, {}, User> & Omit<User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
 }

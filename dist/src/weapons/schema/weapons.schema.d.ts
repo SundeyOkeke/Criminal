@@ -24,6 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document, Types } from "mongoose";
 import { Unit } from "src/categories/schema/unit.schema";
+import { User } from "src/user/schema/user.schema";
 export declare enum Availability {
     Available = "available",
     SignedOut = "signed out"
@@ -35,6 +36,11 @@ export declare class Weapon {
     productionDate: string;
     availability: Availability;
     unit: Unit;
+    users: {
+        user: Types.ObjectId | User;
+        signoutDate: Date;
+        signinDate: Date;
+    }[];
 }
 export type WeaponDocument = Weapon & Document;
 export declare const WeaponSchema: import("mongoose").Schema<Weapon, import("mongoose").Model<Weapon, any, any, any, Document<unknown, any, Weapon> & Omit<Weapon & {

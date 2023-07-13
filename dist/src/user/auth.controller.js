@@ -18,9 +18,11 @@ const auth_service_1 = require("./auth.service");
 const user_dto_1 = require("./dto/user.dto");
 const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
 const weapons_dto_1 = require("../weapons/dto/weapons.dto");
+const weapons_service_1 = require("../weapons/weapons.service");
 let AuthController = class AuthController {
-    constructor(authService) {
+    constructor(authService, weaponsService) {
         this.authService = authService;
+        this.weaponsService = weaponsService;
     }
     register(data) {
         return this.authService.register(data);
@@ -47,6 +49,14 @@ let AuthController = class AuthController {
     getWeapons(req, data) {
         const id = req.user.id;
         return this.authService.getWeapons(id, data);
+    }
+    signoutWeapon(req, data) {
+        const id = req.user.id;
+        return this.authService.signoutWeapon(id, data);
+    }
+    getUserById(req) {
+        const id = req.user.id;
+        return this.authService.getUserById(id);
     }
 };
 __decorate([
@@ -108,9 +118,27 @@ __decorate([
     __metadata("design:paramtypes", [Object, weapons_dto_1.CategoryWeaponDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getWeapons", null);
+__decorate([
+    (0, common_1.Post)("/signout/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.signoutWeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "signoutWeapon", null);
+__decorate([
+    (0, common_1.Get)("/get/user"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getUserById", null);
 AuthController = __decorate([
     (0, common_1.Controller)("user"),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        weapons_service_1.WeaponsService])
 ], AuthController);
 exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

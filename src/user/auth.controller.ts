@@ -11,11 +11,15 @@ import {
 import { AuthService } from "./auth.service";
 import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
-import { CategoryWeaponDto, WeaponDto } from "src/weapons/dto/weapons.dto";
+import { CategoryWeaponDto, WeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
+import { WeaponsService } from "src/weapons/weapons.service";
 
 @Controller("user")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private weaponsService: WeaponsService
+    ) {}
 
   @Post("/register")
   register(@Body() data: RegisterDto) {
@@ -60,5 +64,19 @@ export class AuthController {
   getWeapons(@Req() req, @Body() data: CategoryWeaponDto) {
     const id: string = req.user.id;
     return this.authService.getWeapons(id, data);
+  }
+
+  @Post("/signout/weapon")
+  @UseGuards(JwtAuthGuard)
+  signoutWeapon(@Req() req, @Body() data: signoutWeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.signoutWeapon(id, data);
+  }
+
+  @Get("/get/user")
+  @UseGuards(JwtAuthGuard)
+  getUserById(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.getUserById(id);
   }
 }
