@@ -25,3 +25,10 @@ export class AppointCommDto {
   @IsNotEmpty()
   readonly userId: string;
 }
+
+export class userIdDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly userId: string;
+
+}

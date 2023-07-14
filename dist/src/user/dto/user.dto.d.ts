@@ -9,3 +9,6 @@ export declare class LoginDto {
 export declare class AppointCommDto {
     readonly userId: string;
 }
+export declare class userIdDto {
+    readonly userId: string;
+}

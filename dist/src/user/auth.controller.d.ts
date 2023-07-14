@@ -24,7 +24,7 @@
 /// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
 import { AuthService } from "./auth.service";
-import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointCommDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
 import { CategoryWeaponDto, WeaponDto, approveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
 export declare class AuthController {
@@ -71,4 +71,7 @@ export declare class AuthController {
     getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
+    getUserByProvidedId(data: userIdDto): Promise<import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
 }

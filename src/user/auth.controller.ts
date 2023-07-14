@@ -10,7 +10,7 @@ import {
   Patch,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointCommDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
 import { CategoryWeaponDto, WeaponDto, approveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
@@ -106,5 +106,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getAllUsers() {
     return this.authService.getAllUsers();
+  }
+
+  @Get("/get/user-id")
+  @UseGuards(JwtAuthGuard)
+  getUserByProvidedId(@Body() data:userIdDto) {
+    return this.authService.getUserById(data.userId);
   }
 }
