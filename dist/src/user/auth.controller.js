@@ -73,8 +73,8 @@ let AuthController = class AuthController {
     getAllUsers() {
         return this.authService.getAllUsers();
     }
-    getUserByProvidedId(data) {
-        return this.authService.getUserById(data.userId);
+    getUserByProvidedId(userId) {
+        return this.authService.getUserById(userId);
     }
 };
 __decorate([
@@ -186,11 +186,11 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Get)("/get/user-id"),
+    (0, common_1.Get)('/get/user-id/:userId'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Param)('userId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.userIdDto]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUserByProvidedId", null);
 AuthController = __decorate([

@@ -108,9 +108,9 @@ export class AuthController {
     return this.authService.getAllUsers();
   }
 
-  @Get("/get/user-id")
-  @UseGuards(JwtAuthGuard)
-  getUserByProvidedId(@Body() data:userIdDto) {
-    return this.authService.getUserById(data.userId);
-  }
+  @Get('/get/user-id/:userId')
+@UseGuards(JwtAuthGuard)
+getUserByProvidedId(@Param('userId') userId: string) {
+  return this.authService.getUserById(userId);
+}
 }
