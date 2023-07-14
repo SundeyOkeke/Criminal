@@ -189,6 +189,9 @@ let AuthService = class AuthService {
         const user = await this.userModel.findById(id);
         return await this.weaponsService.weaponHistory(user._id);
     }
+    async getAllUsers() {
+        return await this.userModel.find();
+    }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),

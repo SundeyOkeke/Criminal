@@ -101,4 +101,10 @@ export class AuthController {
     const id: string = req.user.id;
     return this.authService.weaponHistory(id);
   }
+
+  @Get("/all/users")
+  @UseGuards(JwtAuthGuard)
+  getAllUsers() {
+    return this.authService.getAllUsers();
+  }
 }

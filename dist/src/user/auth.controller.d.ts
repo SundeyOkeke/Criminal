@@ -68,4 +68,7 @@ export declare class AuthController {
     weaponHistory(req: any): Promise<(import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
+    getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
 }

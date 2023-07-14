@@ -70,6 +70,9 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.weaponHistory(id);
     }
+    getAllUsers() {
+        return this.authService.getAllUsers();
+    }
 };
 __decorate([
     (0, common_1.Post)("/register"),
@@ -172,6 +175,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "weaponHistory", null);
+__decorate([
+    (0, common_1.Get)("/all/users"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getAllUsers", null);
 AuthController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
