@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Availability, Weapon } from "./schema/weapons.schema";
+import { Approval, Availability, Weapon } from "./schema/weapons.schema";
 import { convertDateFormat } from "src/utils/utils";
 
 @Injectable()
@@ -173,7 +173,8 @@ export class WeaponsService {
     const updateData = {
       user: userId,
       signoutDate: new Date(),
-      signinDate: convertDateFormat(returnDate)
+      signinDate: convertDateFormat(returnDate),
+      approve : Approval.AwaitingApproval
     };
   
     const signoutWeapon = await this.weaponModel.findByIdAndUpdate(
@@ -189,8 +190,40 @@ export class WeaponsService {
     return await this.weaponModel.findById(id).populate("unit");
   }
 
-  // async findOneUnit(unit) {
-  //   const findunit = await this.UnitModel.findById(unit).populate("category");
-  //   return findunit
-  // }
+  async weaponsAwaitApproval(unit) {
+    console.log(unit);
+    return await this.weaponModel.find({
+      unit: unit,
+      availability : "signed out",
+      "users": {
+        $elemMatch: { "approve": Approval.AwaitingApproval }
+      }
+    });
+  }
+
+  async approveWeapon(unit, data) {
+    const { weaponId } = data;
+    console.log(unit);
+    const weapon = await this.weaponModel.findById(weaponId);
+    console.log("heyhey");
+    if (weapon.unit._id.toString() === unit.toString()) {
+      console.log("hey");
+      
+      weapon.users.forEach((user) => {
+        if (user.approve === Approval.AwaitingApproval) {
+          user.approve = Approval.SignoutApproved;
+        }
+      });
+      
+      await weapon.save();
+      return {message : "Successful"}
+    }
+  }
+
+  async weaponHistory(userId) {
+    const weapons = await this.weaponModel.find({ "users": { $elemMatch: { user: userId } } });
+    return weapons;
+  }
 }
+
+

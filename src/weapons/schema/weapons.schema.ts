@@ -8,6 +8,12 @@ export enum Availability {
   SignedOut = "signed out",
 }
 
+export enum Approval {
+  SignoutApproved = "Sign-out Approved",
+  AwaitingApproval = "Awaiting Approval",
+  SigninApproved = "Sign-in Approved",
+}
+
 @Schema({ timestamps: true })
 export class Weapon {
   @Prop({ required: true })
@@ -29,10 +35,10 @@ export class Weapon {
   unit: Unit;
 
   @Prop({
-    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date }],
+    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date, approve: String  }],
     default: [],
   })
-  users: { user: Types.ObjectId | User; signoutDate: Date; signinDate: Date }[];
+  users: { user: Types.ObjectId | User; signoutDate: Date; signinDate: Date, approve: string }[];
 }
 
 export type WeaponDocument = Weapon & Document;

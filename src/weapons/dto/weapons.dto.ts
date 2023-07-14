@@ -33,3 +33,10 @@ export class signoutWeaponDto {
   @IsNotEmpty()
   readonly returnDate: string;
 }
+
+export class approveWeaponDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly weaponId: string;
+
+}

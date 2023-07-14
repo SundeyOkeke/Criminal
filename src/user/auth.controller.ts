@@ -7,11 +7,12 @@ import {
   UseGuards,
   Req,
   Get,
+  Patch,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
-import { CategoryWeaponDto, WeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
+import { CategoryWeaponDto, WeaponDto, approveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
 
 @Controller("user")
@@ -78,5 +79,26 @@ export class AuthController {
   getUserById(@Req() req) {
     const id: string = req.user.id;
     return this.authService.getUserById(id);
+  }
+
+  @Get("/weapons/await-approval")
+  @UseGuards(JwtAuthGuard)
+  weaponsAwaitApproval(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.weaponsAwaitApproval(id);
+  }
+
+  @Patch("/approve/weapon")
+  @UseGuards(JwtAuthGuard)
+  approveWeapon(@Req() req, @Body() data: approveWeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.approveWeapon(id,data);
+  }
+
+  @Get("/weapon/history")
+  @UseGuards(JwtAuthGuard)
+  weaponHistory(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.weaponHistory(id);
   }
 }

@@ -58,6 +58,18 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.getUserById(id);
     }
+    weaponsAwaitApproval(req) {
+        const id = req.user.id;
+        return this.authService.weaponsAwaitApproval(id);
+    }
+    approveWeapon(req, data) {
+        const id = req.user.id;
+        return this.authService.approveWeapon(id, data);
+    }
+    weaponHistory(req) {
+        const id = req.user.id;
+        return this.authService.weaponHistory(id);
+    }
 };
 __decorate([
     (0, common_1.Post)("/register"),
@@ -135,6 +147,31 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Get)("/weapons/await-approval"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "weaponsAwaitApproval", null);
+__decorate([
+    (0, common_1.Patch)("/approve/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.approveWeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "approveWeapon", null);
+__decorate([
+    (0, common_1.Get)("/weapon/history"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "weaponHistory", null);
 AuthController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

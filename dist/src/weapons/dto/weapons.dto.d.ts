@@ -11,3 +11,6 @@ export declare class signoutWeaponDto {
     readonly weaponId: string;
     readonly returnDate: string;
 }
+export declare class approveWeaponDto {
+    readonly weaponId: string;
+}

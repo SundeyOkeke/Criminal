@@ -176,7 +176,8 @@ let WeaponsService = class WeaponsService {
         const updateData = {
             user: userId,
             signoutDate: new Date(),
-            signinDate: (0, utils_1.convertDateFormat)(returnDate)
+            signinDate: (0, utils_1.convertDateFormat)(returnDate),
+            approve: weapons_schema_1.Approval.AwaitingApproval
         };
         const signoutWeapon = await this.weaponModel.findByIdAndUpdate(weaponId, { $push: { users: updateData }, availability: weapons_schema_1.Availability.SignedOut }, { new: true });
         console.log(signoutWeapon);
@@ -184,6 +185,36 @@ let WeaponsService = class WeaponsService {
     }
     async getWeaponById(id) {
         return await this.weaponModel.findById(id).populate("unit");
+    }
+    async weaponsAwaitApproval(unit) {
+        console.log(unit);
+        return await this.weaponModel.find({
+            unit: unit,
+            availability: "signed out",
+            "users": {
+                $elemMatch: { "approve": weapons_schema_1.Approval.AwaitingApproval }
+            }
+        });
+    }
+    async approveWeapon(unit, data) {
+        const { weaponId } = data;
+        console.log(unit);
+        const weapon = await this.weaponModel.findById(weaponId);
+        console.log("heyhey");
+        if (weapon.unit._id.toString() === unit.toString()) {
+            console.log("hey");
+            weapon.users.forEach((user) => {
+                if (user.approve === weapons_schema_1.Approval.AwaitingApproval) {
+                    user.approve = weapons_schema_1.Approval.SignoutApproved;
+                }
+            });
+            await weapon.save();
+            return { message: "Successful" };
+        }
+    }
+    async weaponHistory(userId) {
+        const weapons = await this.weaponModel.find({ "users": { $elemMatch: { user: userId } } });
+        return weapons;
     }
 };
 WeaponsService = __decorate([

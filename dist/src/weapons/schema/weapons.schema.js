@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WeaponSchema = exports.Weapon = exports.Availability = void 0;
+exports.WeaponSchema = exports.Weapon = exports.Approval = exports.Availability = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const unit_schema_1 = require("../../categories/schema/unit.schema");
@@ -18,6 +18,12 @@ var Availability;
     Availability["Available"] = "available";
     Availability["SignedOut"] = "signed out";
 })(Availability = exports.Availability || (exports.Availability = {}));
+var Approval;
+(function (Approval) {
+    Approval["SignoutApproved"] = "Sign-out Approved";
+    Approval["AwaitingApproval"] = "Awaiting Approval";
+    Approval["SigninApproved"] = "Sign-in Approved";
+})(Approval = exports.Approval || (exports.Approval = {}));
 let Weapon = class Weapon {
 };
 __decorate([
@@ -46,7 +52,7 @@ __decorate([
 ], Weapon.prototype, "unit", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
-        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date }],
+        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date, approve: String }],
         default: [],
     }),
     __metadata("design:type", Array)

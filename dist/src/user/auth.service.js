@@ -102,7 +102,8 @@ let AuthService = class AuthService {
         const { userId } = data;
         const user = await this.userModel.findById(id);
         if (user.role === "brigade commander" ||
-            user.role === "division commander") {
+            user.role === "division commander" ||
+            user.role === "super admin") {
             console.log("hey");
             const user = await this.userModel.findById(userId).populate("unit");
             console.log(user);
@@ -173,6 +174,20 @@ let AuthService = class AuthService {
     }
     async getUserById(id) {
         return await this.userModel.findById(id).populate("unit");
+    }
+    async weaponsAwaitApproval(id) {
+        const user = await this.userModel.findById(id).populate("unit");
+        return await this.weaponsService.weaponsAwaitApproval(user.unit._id);
+    }
+    async approveWeapon(id, data) {
+        const user = await this.userModel.findById(id).populate("unit");
+        if (user.role === "unit commander") {
+            return await this.weaponsService.approveWeapon(user.unit._id, data);
+        }
+    }
+    async weaponHistory(id) {
+        const user = await this.userModel.findById(id);
+        return await this.weaponsService.weaponHistory(user._id);
     }
 };
 AuthService = __decorate([

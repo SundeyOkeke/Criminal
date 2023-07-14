@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signoutWeaponDto = exports.CategoryWeaponDto = exports.WeaponDto = void 0;
+exports.approveWeaponDto = exports.signoutWeaponDto = exports.CategoryWeaponDto = exports.WeaponDto = void 0;
 const class_validator_1 = require("class-validator");
 class WeaponDto {
 }
@@ -55,4 +55,12 @@ __decorate([
     __metadata("design:type", String)
 ], signoutWeaponDto.prototype, "returnDate", void 0);
 exports.signoutWeaponDto = signoutWeaponDto;
+class approveWeaponDto {
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], approveWeaponDto.prototype, "weaponId", void 0);
+exports.approveWeaponDto = approveWeaponDto;
 //# sourceMappingURL=weapons.dto.js.map

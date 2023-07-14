@@ -29,6 +29,11 @@ export declare enum Availability {
     Available = "available",
     SignedOut = "signed out"
 }
+export declare enum Approval {
+    SignoutApproved = "Sign-out Approved",
+    AwaitingApproval = "Awaiting Approval",
+    SigninApproved = "Sign-in Approved"
+}
 export declare class Weapon {
     name: string;
     DateOfManufacture: string;
@@ -40,6 +45,7 @@ export declare class Weapon {
         user: Types.ObjectId | User;
         signoutDate: Date;
         signinDate: Date;
+        approve: string;
     }[];
 }
 export type WeaponDocument = Weapon & Document;

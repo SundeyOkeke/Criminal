@@ -44,4 +44,13 @@ export declare class WeaponsService {
     getWeaponById(id: any): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
+    weaponsAwaitApproval(unit: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
+    approveWeapon(unit: any, data: any): Promise<{
+        message: string;
+    }>;
+    weaponHistory(userId: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
 }
