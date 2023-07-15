@@ -24,146 +24,146 @@ export class WeaponsService {
     return await this.weaponModel.find({ unit: unitId, availability: "available" }) 
    }
 
-  async getWeaponsByUnitComm(commanderData) {
+  async getWeaponsByComm(commanderData) {
     const { unitId } = commanderData;
     console.log(unitId);
     return await this.weaponModel.find({ unit: unitId });
   }
 
-  async getWeaponsByBrigadeComm(data) {
-    if (data.categoryName) {
-      const { categoryName } = data;
-      return await this.weaponModel.aggregate([
-        {
-          $lookup: {
-            from: "units", // Replace with the actual name of the collection for the 'Unit' model
-            localField: "unit",
-            foreignField: "_id",
-            as: "unit",
-          },
-        },
-        {
-          $unwind: "$unit",
-        },
-        {
-          $lookup: {
-            from: "categories", // Replace with the actual name of the collection for the 'Category' model
-            localField: "unit.category",
-            foreignField: "_id",
-            as: "unit.category",
-          },
-        },
-        {
-          $unwind: "$unit.category",
-        },
-        {
-          $match: {
-            $or: [{ "unit.category.name": `${categoryName}` }],
-          },
-        },
-      ]);
-    }
-    return await this.weaponModel.aggregate([
-      {
-        $lookup: {
-          from: "units", // Replace with the actual name of the collection for the 'Unit' model
-          localField: "unit",
-          foreignField: "_id",
-          as: "unit",
-        },
-      },
-      {
-        $unwind: "$unit",
-      },
-      {
-        $lookup: {
-          from: "categories", // Replace with the actual name of the collection for the 'Category' model
-          localField: "unit.category",
-          foreignField: "_id",
-          as: "unit.category",
-        },
-      },
-      {
-        $unwind: "$unit.category",
-      },
-      {
-        $match: {
-          $or: [
-            { "unit.category.name": "Brigade" },
-            { "unit.category.name": "Battalion" },
-          ],
-        },
-      },
-    ]);
-  }
+  // async getWeaponsByBrigadeComm(data) {
+  //   if (data.categoryName) {
+  //     const { categoryName } = data;
+  //     return await this.weaponModel.aggregate([
+  //       {
+  //         $lookup: {
+  //           from: "units", // Replace with the actual name of the collection for the 'Unit' model
+  //           localField: "unit",
+  //           foreignField: "_id",
+  //           as: "unit",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$unit",
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "categories", // Replace with the actual name of the collection for the 'Category' model
+  //           localField: "unit.category",
+  //           foreignField: "_id",
+  //           as: "unit.category",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$unit.category",
+  //       },
+  //       {
+  //         $match: {
+  //           $or: [{ "unit.category.name": `${categoryName}` }],
+  //         },
+  //       },
+  //     ]);
+  //   }
+  //   return await this.weaponModel.aggregate([
+  //     {
+  //       $lookup: {
+  //         from: "units", // Replace with the actual name of the collection for the 'Unit' model
+  //         localField: "unit",
+  //         foreignField: "_id",
+  //         as: "unit",
+  //       },
+  //     },
+  //     {
+  //       $unwind: "$unit",
+  //     },
+  //     {
+  //       $lookup: {
+  //         from: "categories", // Replace with the actual name of the collection for the 'Category' model
+  //         localField: "unit.category",
+  //         foreignField: "_id",
+  //         as: "unit.category",
+  //       },
+  //     },
+  //     {
+  //       $unwind: "$unit.category",
+  //     },
+  //     {
+  //       $match: {
+  //         $or: [
+  //           { "unit.category.name": "Brigade" },
+  //           { "unit.category.name": "Battalion" },
+  //         ],
+  //       },
+  //     },
+  //   ]);
+  // }
 
-  async getWeaponsByDivisionComm(data) {
-    if (data.categoryName) {
-      const { categoryName } = data;
-      return await this.weaponModel.aggregate([
-        {
-          $lookup: {
-            from: "units", // Replace with the actual name of the collection for the 'Unit' model
-            localField: "unit",
-            foreignField: "_id",
-            as: "unit",
-          },
-        },
-        {
-          $unwind: "$unit",
-        },
-        {
-          $lookup: {
-            from: "categories", // Replace with the actual name of the collection for the 'Category' model
-            localField: "unit.category",
-            foreignField: "_id",
-            as: "unit.category",
-          },
-        },
-        {
-          $unwind: "$unit.category",
-        },
-        {
-          $match: {
-            $or: [{ "unit.category.name": `${categoryName}` }],
-          },
-        },
-      ]);
-    }
-    return await this.weaponModel.aggregate([
-      {
-        $lookup: {
-          from: "units", // Replace with the actual name of the collection for the 'Unit' model
-          localField: "unit",
-          foreignField: "_id",
-          as: "unit",
-        },
-      },
-      {
-        $unwind: "$unit",
-      },
-      {
-        $lookup: {
-          from: "categories", // Replace with the actual name of the collection for the 'Category' model
-          localField: "unit.category",
-          foreignField: "_id",
-          as: "unit.category",
-        },
-      },
-      {
-        $unwind: "$unit.category",
-      },
-      {
-        $match: {
-          $or: [
-            { "unit.category.name": "Brigade" },
-            { "unit.category.name": "Battalion" },
-            { "unit.category.name": "Division" },
-          ],
-        },
-      },
-    ]);
-  }
+  // async getWeaponsByDivisionComm(data) {
+  //   if (data.categoryName) {
+  //     const { categoryName } = data;
+  //     return await this.weaponModel.aggregate([
+  //       {
+  //         $lookup: {
+  //           from: "units", // Replace with the actual name of the collection for the 'Unit' model
+  //           localField: "unit",
+  //           foreignField: "_id",
+  //           as: "unit",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$unit",
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "categories", // Replace with the actual name of the collection for the 'Category' model
+  //           localField: "unit.category",
+  //           foreignField: "_id",
+  //           as: "unit.category",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$unit.category",
+  //       },
+  //       {
+  //         $match: {
+  //           $or: [{ "unit.category.name": `${categoryName}` }],
+  //         },
+  //       },
+  //     ]);
+  //   }
+  //   return await this.weaponModel.aggregate([
+  //     {
+  //       $lookup: {
+  //         from: "units", // Replace with the actual name of the collection for the 'Unit' model
+  //         localField: "unit",
+  //         foreignField: "_id",
+  //         as: "unit",
+  //       },
+  //     },
+  //     {
+  //       $unwind: "$unit",
+  //     },
+  //     {
+  //       $lookup: {
+  //         from: "categories", // Replace with the actual name of the collection for the 'Category' model
+  //         localField: "unit.category",
+  //         foreignField: "_id",
+  //         as: "unit.category",
+  //       },
+  //     },
+  //     {
+  //       $unwind: "$unit.category",
+  //     },
+  //     {
+  //       $match: {
+  //         $or: [
+  //           { "unit.category.name": "Brigade" },
+  //           { "unit.category.name": "Battalion" },
+  //           { "unit.category.name": "Division" },
+  //         ],
+  //       },
+  //     },
+  //   ]);
+  // }
 
   async signoutWeapon(user, data) {
     const { weaponId, returnDate } = data;
@@ -221,7 +221,7 @@ export class WeaponsService {
   }
 
   async weaponHistory(userId) {
-    const weapons = await this.weaponModel.find({ "users": { $elemMatch: { user: userId } } });
+    const weapons = await this.weaponModel.find({availability :Availability.SignedOut, "users": { $elemMatch: { user: userId } } });
     return weapons;
   }
 }

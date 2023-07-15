@@ -137,17 +137,11 @@ let AuthService = class AuthService {
             };
             return await this.weaponsService.getWeaponsByUnitMem(userData);
         }
-        if (user.role === "unit commander") {
+        if (user.role === "unit commander" || user.role === "brigade commander" || user.role === "division commander") {
             const commanderData = {
                 unitId: user.unit._id,
             };
-            return await this.weaponsService.getWeaponsByUnitComm(commanderData);
-        }
-        if (user.role === "brigade commander") {
-            return await this.weaponsService.getWeaponsByBrigadeComm(data);
-        }
-        if (user.role === "division commander") {
-            return await this.weaponsService.getWeaponsByDivisionComm(data);
+            return await this.weaponsService.getWeaponsByComm(commanderData);
         }
     }
     async signoutWeapon(id, data) {

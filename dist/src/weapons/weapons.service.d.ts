@@ -33,11 +33,9 @@ export declare class WeaponsService {
     getWeaponsByUnitMem(commanderData: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
-    getWeaponsByUnitComm(commanderData: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+    getWeaponsByComm(commanderData: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
-    getWeaponsByBrigadeComm(data: any): Promise<any[]>;
-    getWeaponsByDivisionComm(data: any): Promise<any[]>;
     signoutWeapon(user: any, data: any): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;

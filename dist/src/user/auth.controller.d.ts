@@ -52,7 +52,9 @@ export declare class AuthController {
     registerWeapon(req: any, data: WeaponDto): Promise<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
-    getWeapons(req: any, data: CategoryWeaponDto): Promise<any[]>;
+    getWeapons(req: any, data: CategoryWeaponDto): Promise<(import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
     signoutWeapon(req: any, data: signoutWeaponDto): Promise<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
