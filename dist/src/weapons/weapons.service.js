@@ -61,7 +61,7 @@ let WeaponsService = class WeaponsService {
             "users": {
                 $elemMatch: { "approve": weapons_schema_1.Approval.AwaitingApproval }
             }
-        });
+        }).populate("users.user");
     }
     async approveWeapon(unit, data) {
         const { weaponId } = data;

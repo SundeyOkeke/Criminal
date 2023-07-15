@@ -198,7 +198,7 @@ export class WeaponsService {
       "users": {
         $elemMatch: { "approve": Approval.AwaitingApproval }
       }
-    });
+    }).populate("users.user");
   }
 
   async approveWeapon(unit, data) {

@@ -61,9 +61,9 @@ export declare class AuthController {
     getUserById(req: any): Promise<import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
-    weaponsAwaitApproval(req: any): Promise<(import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
+    weaponsAwaitApproval(req: any): Promise<Omit<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
         _id: import("mongoose").Types.ObjectId;
-    }, never>)[]>;
+    }, never>, never>[]>;
     approveWeapon(req: any, data: approveWeaponDto): Promise<{
         message: string;
     }>;
