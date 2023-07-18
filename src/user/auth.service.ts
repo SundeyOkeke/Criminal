@@ -11,6 +11,7 @@ import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { WeaponDto } from "src/weapons/dto/weapons.dto";
 import { Weapon } from "src/weapons/schema/weapons.schema";
 import { WeaponsService } from "src/weapons/weapons.service";
+import { Hash } from "src/utils/utils";
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
   ) {}
 
   async register(data: RegisterDto) {
-    const { name, serviceNumber, unit } = data;
+    const { name, serviceNumber, unit, password } = data;
 
     if (unit) {
       //check if email already exists
@@ -37,6 +38,7 @@ export class AuthService {
 
       const createUser = await this.userModel.create({
         name,
+        password : Hash.make(password),
         serviceNumber,
         unit: userUnit._id,
         categoryName: (userUnit.category as { name: string }).name,
@@ -48,6 +50,7 @@ export class AuthService {
 
     const createUser = await this.userModel.create({
       name: name,
+      password : Hash.make(password),
       serviceNumber: serviceNumber,
       role: UserRole.SuperAdmin,
     });
@@ -56,14 +59,20 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    const { serviceNumber } = data;
+    const { serviceNumber, password } = data;
+
+    
 
     const user = await this.userModel
       .findOne({ serviceNumber })
       .populate("unit");
+
+    const confirmPassword = Hash.compare(password, user.password)
+
+
     console.log(user);
-    if (!user) {
-      throw new UnauthorizedException("User not found");
+    if (!user || !confirmPassword) {
+      throw new UnauthorizedException("Invalid Credentials");
     }
 
     const payload = {
@@ -79,7 +88,7 @@ export class AuthService {
   async appointDivisionComm(id, data: AppointCommDto) {
     const { userId } = data;
     const user = await this.userModel.findById(id);
-    if (user.role === "super admin") {
+    if (user.role === "Super Admin") {
       console.log("hey");
       const user = await this.userModel.findById(userId);
       if (user.categoryName === "Division") {
@@ -94,7 +103,7 @@ export class AuthService {
   async appointBrigadeComm(id, data: AppointCommDto) {
     const { userId } = data;
     const user = await this.userModel.findById(id);
-    if (user.role === "super admin") {
+    if (user.role === "Super Admin") {
       console.log("hey");
       const user = await this.userModel.findById(userId);
       console.log(user);
@@ -111,9 +120,9 @@ export class AuthService {
     const { userId } = data;
     const user = await this.userModel.findById(id);
     if (
-      user.role === "brigade commander" ||
-      user.role === "division commander" ||
-      user.role === "super admin"
+      user.role === "Brigade Commander" ||
+      user.role === "Division Commander" ||
+      user.role === "Super Admin"
     ) {
       console.log("hey");
       const user = await this.userModel.findById(userId).populate("unit");
@@ -127,7 +136,7 @@ export class AuthService {
           role: UserRole.UnitCommander,
         });
         return {
-          message: `${user.serviceNumber} successfully appointed as ${user.unit.name} unit commander `,
+          message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
         };
       }
     }
@@ -135,7 +144,7 @@ export class AuthService {
 
   async registerWeapon(id, weaponData: WeaponDto) {
     const user = await this.userModel.findById(id).populate("unit");
-    if (user.role === "unit commander") {
+    if (user.role === "Unit Commander") {
       const commanderData = {
         unitId: user.unit._id,
       };
@@ -147,22 +156,22 @@ export class AuthService {
 
   async getWeapons(id, data) {
     const user = await this.userModel.findById(id).populate("unit");
-    if (user.role === "unit member") {
+    if (user.role === "Unit Member") {
       const userData = {
         unitId: user.unit._id,
       };
       return await this.weaponsService.getWeaponsByUnitMem(userData);
     }
-    if (user.role === "unit commander" || user.role === "brigade commander" || user.role === "division commander") {
+    if (user.role === "Unit Commander" || user.role === "Brigade Commander" || user.role === "Division Commander") {
       const commanderData = {
         unitId: user.unit._id,
       };
       return await this.weaponsService.getWeaponsByComm(commanderData);
     }
-    // if (user.role === "brigade commander") {
+    // if (user.role === "Brigade Commander") {
     //   return await this.weaponsService.getWeaponsByBrigadeComm(data);
     // }
-    // if (user.role === "division commander") {
+    // if (user.role === "Division Commander") {
     //   return await this.weaponsService.getWeaponsByDivisionComm(data);
     // }
   }
@@ -202,7 +211,7 @@ export class AuthService {
 
   async approveWeapon(id, data) {
     const user =  await this.userModel.findById(id).populate("unit")
-    if(user.role === "unit commander"){
+    if(user.role === "Unit Commander"){
       return await this.weaponsService.approveWeapon(user.unit._id, data)
 
     }

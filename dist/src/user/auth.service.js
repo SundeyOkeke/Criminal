@@ -20,6 +20,7 @@ const user_schema_1 = require("./schema/user.schema");
 const jwt_1 = require("@nestjs/jwt");
 const category_service_1 = require("../categories/category.service");
 const weapons_service_1 = require("../weapons/weapons.service");
+const utils_1 = require("../utils/utils");
 let AuthService = class AuthService {
     constructor(userModel, jwtService, categoryService, weaponsService) {
         this.userModel = userModel;
@@ -28,7 +29,7 @@ let AuthService = class AuthService {
         this.weaponsService = weaponsService;
     }
     async register(data) {
-        const { name, serviceNumber, unit } = data;
+        const { name, serviceNumber, unit, password } = data;
         if (unit) {
             const user = await this.userModel.findOne({ serviceNumber });
             if (user) {
@@ -38,6 +39,7 @@ let AuthService = class AuthService {
             console.log(userUnit);
             const createUser = await this.userModel.create({
                 name,
+                password: utils_1.Hash.make(password),
                 serviceNumber,
                 unit: userUnit._id,
                 categoryName: userUnit.category.name,
@@ -47,19 +49,21 @@ let AuthService = class AuthService {
         console.log("hey", data);
         const createUser = await this.userModel.create({
             name: name,
+            password: utils_1.Hash.make(password),
             serviceNumber: serviceNumber,
             role: user_schema_1.UserRole.SuperAdmin,
         });
         return createUser;
     }
     async login(data) {
-        const { serviceNumber } = data;
+        const { serviceNumber, password } = data;
         const user = await this.userModel
             .findOne({ serviceNumber })
             .populate("unit");
+        const confirmPassword = utils_1.Hash.compare(password, user.password);
         console.log(user);
-        if (!user) {
-            throw new common_1.UnauthorizedException("User not found");
+        if (!user || !confirmPassword) {
+            throw new common_1.UnauthorizedException("Invalid Credentials");
         }
         const payload = {
             id: user._id,
@@ -72,7 +76,7 @@ let AuthService = class AuthService {
     async appointDivisionComm(id, data) {
         const { userId } = data;
         const user = await this.userModel.findById(id);
-        if (user.role === "super admin") {
+        if (user.role === "Super Admin") {
             console.log("hey");
             const user = await this.userModel.findById(userId);
             if (user.categoryName === "Division") {
@@ -86,7 +90,7 @@ let AuthService = class AuthService {
     async appointBrigadeComm(id, data) {
         const { userId } = data;
         const user = await this.userModel.findById(id);
-        if (user.role === "super admin") {
+        if (user.role === "Super Admin") {
             console.log("hey");
             const user = await this.userModel.findById(userId);
             console.log(user);
@@ -101,9 +105,9 @@ let AuthService = class AuthService {
     async appointBattalionComm(id, data) {
         const { userId } = data;
         const user = await this.userModel.findById(id);
-        if (user.role === "brigade commander" ||
-            user.role === "division commander" ||
-            user.role === "super admin") {
+        if (user.role === "Brigade Commander" ||
+            user.role === "Division Commander" ||
+            user.role === "Super Admin") {
             console.log("hey");
             const user = await this.userModel.findById(userId).populate("unit");
             console.log(user);
@@ -114,14 +118,14 @@ let AuthService = class AuthService {
                     role: user_schema_1.UserRole.UnitCommander,
                 });
                 return {
-                    message: `${user.serviceNumber} successfully appointed as ${user.unit.name} unit commander `,
+                    message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
                 };
             }
         }
     }
     async registerWeapon(id, weaponData) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "unit commander") {
+        if (user.role === "Unit Commander") {
             const commanderData = {
                 unitId: user.unit._id,
             };
@@ -131,13 +135,13 @@ let AuthService = class AuthService {
     }
     async getWeapons(id, data) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "unit member") {
+        if (user.role === "Unit Member") {
             const userData = {
                 unitId: user.unit._id,
             };
             return await this.weaponsService.getWeaponsByUnitMem(userData);
         }
-        if (user.role === "unit commander" || user.role === "brigade commander" || user.role === "division commander") {
+        if (user.role === "Unit Commander" || user.role === "Brigade Commander" || user.role === "Division Commander") {
             const commanderData = {
                 unitId: user.unit._id,
             };
@@ -175,7 +179,7 @@ let AuthService = class AuthService {
     }
     async approveWeapon(id, data) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "unit commander") {
+        if (user.role === "Unit Commander") {
             return await this.weaponsService.approveWeapon(user.unit._id, data);
         }
     }

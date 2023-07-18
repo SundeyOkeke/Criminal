@@ -7,6 +7,10 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
+  readonly password: string;
+
+  @IsString()
+  @IsNotEmpty()
   readonly serviceNumber: string;
 
   @IsString()
@@ -18,6 +22,10 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   readonly serviceNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly password: string;
 }
 
 export class AppointCommDto {

@@ -25,14 +25,19 @@
 import { Document } from "mongoose";
 import { Unit } from "src/categories/schema/unit.schema";
 export declare enum UserRole {
-    UnitMember = "unit member",
-    UnitCommander = "unit commander",
-    BrigadeCommander = "brigade commander",
-    DivisionCommander = "division commander",
-    SuperAdmin = "super admin"
+    UnitMember = "Unit Member",
+    UnitCommander = "Unit Commander",
+    BrigadeCommander = "Brigade Commander",
+    DivisionCommander = "Division Commander",
+    SuperAdmin = "Super Admin"
+}
+export declare class Hash {
+    static make(plainText: any): string;
+    static compare(plainText: any, hash: any): boolean;
 }
 export declare class User {
     name: string;
+    password: string;
     serviceNumber: string;
     unit: Unit;
     categoryName: string;
