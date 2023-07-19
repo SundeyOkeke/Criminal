@@ -29,11 +29,8 @@ export declare enum UserRole {
     UnitCommander = "Unit Commander",
     BrigadeCommander = "Brigade Commander",
     DivisionCommander = "Division Commander",
-    SuperAdmin = "Super Admin"
-}
-export declare class Hash {
-    static make(plainText: any): string;
-    static compare(plainText: any, hash: any): boolean;
+    SuperAdmin = "Super Admin",
+    Amourer = "Amourer"
 }
 export declare class User {
     name: string;

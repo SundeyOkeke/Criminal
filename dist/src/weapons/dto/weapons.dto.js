@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approveWeaponDto = exports.signoutWeaponDto = exports.CategoryWeaponDto = exports.WeaponDto = void 0;
+exports.retrieveWeaponDto = exports.releaseWeaponDto = exports.approveWeaponDto = exports.signoutWeaponDto = exports.CategoryWeaponDto = exports.WeaponDto = void 0;
 const class_validator_1 = require("class-validator");
 class WeaponDto {
 }
@@ -33,6 +33,11 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], WeaponDto.prototype, "serialNumber", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], WeaponDto.prototype, "condition", void 0);
 exports.WeaponDto = WeaponDto;
 class CategoryWeaponDto {
 }
@@ -63,4 +68,25 @@ __decorate([
     __metadata("design:type", String)
 ], approveWeaponDto.prototype, "weaponId", void 0);
 exports.approveWeaponDto = approveWeaponDto;
+class releaseWeaponDto {
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], releaseWeaponDto.prototype, "weaponId", void 0);
+exports.releaseWeaponDto = releaseWeaponDto;
+class retrieveWeaponDto {
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], retrieveWeaponDto.prototype, "weaponId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], retrieveWeaponDto.prototype, "condition", void 0);
+exports.retrieveWeaponDto = retrieveWeaponDto;
 //# sourceMappingURL=weapons.dto.js.map

@@ -3,6 +3,7 @@ export declare class WeaponDto {
     readonly DateOfManufacture: string;
     readonly productionDate: string;
     readonly serialNumber: string;
+    readonly condition: string;
 }
 export declare class CategoryWeaponDto {
     readonly categoryName: string;
@@ -13,4 +14,11 @@ export declare class signoutWeaponDto {
 }
 export declare class approveWeaponDto {
     readonly weaponId: string;
+}
+export declare class releaseWeaponDto {
+    readonly weaponId: string;
+}
+export declare class retrieveWeaponDto {
+    readonly weaponId: string;
+    readonly condition: string;
 }

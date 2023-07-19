@@ -30,9 +30,14 @@ export declare enum Availability {
     SignedOut = "signed out"
 }
 export declare enum Approval {
-    SignoutApproved = "Sign-out Approved",
     AwaitingApproval = "Awaiting Approval",
-    SigninApproved = "Sign-in Approved"
+    SigninApproved = "Signed-in Approved",
+    AwaitingRelease = "Awaiting Release",
+    Released = "Issued"
+}
+export declare enum Condition {
+    Good = "Good",
+    Bad = "Bad"
 }
 export declare class Weapon {
     name: string;
@@ -40,11 +45,13 @@ export declare class Weapon {
     serialNumber: string;
     productionDate: string;
     availability: Availability;
+    condition: Condition;
     unit: Unit;
     users: {
         user: Types.ObjectId | User;
         signoutDate: Date;
-        signinDate: Date;
+        proposedSigninDate: Date;
+        actualSigninDate: Date;
         approve: string;
     }[];
 }

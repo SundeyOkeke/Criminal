@@ -8,7 +8,7 @@ export declare class LoginDto {
     readonly serviceNumber: string;
     readonly password: string;
 }
-export declare class AppointCommDto {
+export declare class AppointDto {
     readonly userId: string;
 }
 export declare class userIdDto {

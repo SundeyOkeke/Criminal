@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WeaponSchema = exports.Weapon = exports.Approval = exports.Availability = void 0;
+exports.WeaponSchema = exports.Weapon = exports.Condition = exports.Approval = exports.Availability = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const unit_schema_1 = require("../../categories/schema/unit.schema");
@@ -20,10 +20,16 @@ var Availability;
 })(Availability = exports.Availability || (exports.Availability = {}));
 var Approval;
 (function (Approval) {
-    Approval["SignoutApproved"] = "Sign-out Approved";
     Approval["AwaitingApproval"] = "Awaiting Approval";
-    Approval["SigninApproved"] = "Sign-in Approved";
+    Approval["SigninApproved"] = "Signed-in Approved";
+    Approval["AwaitingRelease"] = "Awaiting Release";
+    Approval["Released"] = "Issued";
 })(Approval = exports.Approval || (exports.Approval = {}));
+var Condition;
+(function (Condition) {
+    Condition["Good"] = "Good";
+    Condition["Bad"] = "Bad";
+})(Condition = exports.Condition || (exports.Condition = {}));
 let Weapon = class Weapon {
 };
 __decorate([
@@ -47,12 +53,16 @@ __decorate([
     __metadata("design:type", String)
 ], Weapon.prototype, "availability", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ enum: Condition }),
+    __metadata("design:type", String)
+], Weapon.prototype, "condition", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.SchemaTypes.ObjectId, ref: "Unit" }),
     __metadata("design:type", unit_schema_1.Unit)
 ], Weapon.prototype, "unit", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
-        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date, approve: String }],
+        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, proposedSigninDate: Date, actualSigninDate: Date, approve: String }],
         default: [],
     }),
     __metadata("design:type", Array)

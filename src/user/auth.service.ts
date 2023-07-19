@@ -7,11 +7,12 @@ import { JwtService } from "@nestjs/jwt";
 
 import { Unit } from "src/categories/schema/unit.schema";
 import { CategoryService } from "src/categories/category.service";
-import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { WeaponDto } from "src/weapons/dto/weapons.dto";
 import { Weapon } from "src/weapons/schema/weapons.schema";
 import { WeaponsService } from "src/weapons/weapons.service";
 import { Hash } from "src/utils/utils";
+import { Equal } from "typeorm";
 
 @Injectable()
 export class AuthService {
@@ -85,7 +86,7 @@ export class AuthService {
     return { token, user };
   }
 
-  async appointDivisionComm(id, data: AppointCommDto) {
+  async appointDivisionComm(id, data: AppointDto) {
     const { userId } = data;
     const user = await this.userModel.findById(id);
     if (user.role === "Super Admin") {
@@ -100,7 +101,7 @@ export class AuthService {
     }
   }
 
-  async appointBrigadeComm(id, data: AppointCommDto) {
+  async appointBrigadeComm(id, data: AppointDto) {
     const { userId } = data;
     const user = await this.userModel.findById(id);
     if (user.role === "Super Admin") {
@@ -116,7 +117,7 @@ export class AuthService {
     }
   }
 
-  async appointBattalionComm(id, data: AppointCommDto) {
+  async appointBattalionComm(id, data: AppointDto) {
     const { userId } = data;
     const user = await this.userModel.findById(id);
     if (
@@ -127,18 +128,27 @@ export class AuthService {
       console.log("hey");
       const user = await this.userModel.findById(userId).populate("unit");
       console.log(user);
-      if (
-        user.categoryName === "Battalion" ||
-        user.categoryName === "Brigade" ||
-        user.categoryName === "Division"
-      ) {
+     
         await this.userModel.findByIdAndUpdate(userId, {
           role: UserRole.UnitCommander,
         });
         return {
           message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
         };
-      }
+      
+    }
+  }
+
+  async appointAmourer(id, data: AppointDto) {
+    const { userId } = data;
+    const commProfile = await this.userModel.findById(id).populate("unit");
+    const user = await this.userModel.findById(userId).populate("unit");
+
+    if (commProfile.role === UserRole.UnitCommander && commProfile.unit._id.toString() === user.unit._id.toString()) {
+        await this.userModel.findByIdAndUpdate(userId, {
+          role: UserRole.Amourer,
+        });
+        return { message: "Successful" };
     }
   }
 
@@ -208,14 +218,45 @@ export class AuthService {
     const user =  await this.userModel.findById(id).populate("unit")
    return await this.weaponsService.weaponsAwaitApproval(user.unit._id)
   }
+  
+  async weaponsAwaitRelease(id) {
+    const user =  await this.userModel.findById(id).populate("unit")
+   return await this.weaponsService.weaponsAwaitRelease(user.unit._id)
+  }
+
+  async releasedWeapons(id) {
+    const user =  await this.userModel.findById(id).populate("unit")
+   return await this.weaponsService.releasedWeapons(user.unit._id)
+  }
+
+  
 
   async approveWeapon(id, data) {
     const user =  await this.userModel.findById(id).populate("unit")
-    if(user.role === "Unit Commander"){
+    if(user.role === UserRole.UnitCommander){
       return await this.weaponsService.approveWeapon(user.unit._id, data)
 
     }
   }
+
+  async releaseWeapon(id, data) {
+    const user =  await this.userModel.findById(id).populate("unit")
+    if(user.role === UserRole.Amourer){
+      return await this.weaponsService.releaseWeapon(user.unit._id, data)
+
+    }
+  }
+
+  
+
+  async retrieveWeapon(id, data) {
+    const user =  await this.userModel.findById(id).populate("unit")
+    if(user.role === UserRole.Amourer){
+      return await this.weaponsService.retrieveWeapon(user.unit._id, data)
+
+    }
+  }
+  
   async weaponHistory(id) {
     const user =  await this.userModel.findById(id)
     return await this.weaponsService.weaponHistory(user._id)
@@ -223,6 +264,11 @@ export class AuthService {
 
   async getAllUsers() {
     return await this.userModel.find()
+  }
+
+  async getAllUnitUsers(id) {
+    const user =  await this.userModel.findById(id).populate("unit")
+    return await this.userModel.find({unit : user.unit._id})
   }
 }
 

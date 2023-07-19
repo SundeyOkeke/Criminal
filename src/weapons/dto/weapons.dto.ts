@@ -16,6 +16,10 @@ export class WeaponDto {
   @IsString()
   @IsNotEmpty()
   readonly serialNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly condition: string;
 }
 
 export class CategoryWeaponDto {
@@ -40,3 +44,21 @@ export class approveWeaponDto {
   readonly weaponId: string;
 
 }
+
+export class releaseWeaponDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly weaponId: string;
+
+}
+
+export class retrieveWeaponDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly weaponId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly condition: string;
+}
+

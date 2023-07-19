@@ -9,10 +9,17 @@ export enum Availability {
 }
 
 export enum Approval {
-  SignoutApproved = "Sign-out Approved",
   AwaitingApproval = "Awaiting Approval",
-  SigninApproved = "Sign-in Approved",
+  SigninApproved = "Signed-in Approved",
+  AwaitingRelease = "Awaiting Release",
+  Released = "Issued",
 }
+
+export enum Condition {
+  Good = "Good",
+  Bad = "Bad",
+}
+
 
 @Schema({ timestamps: true })
 export class Weapon {
@@ -31,14 +38,17 @@ export class Weapon {
   @Prop({ enum: Availability, default: Availability.Available })
   availability: Availability;
 
+  @Prop({ enum: Condition })
+  condition: Condition;
+
   @Prop({ type: SchemaTypes.ObjectId, ref: "Unit" })
   unit: Unit;
 
   @Prop({
-    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, signinDate: Date, approve: String  }],
+    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, proposedSigninDate: Date, actualSigninDate: Date, approve: String  }],
     default: [],
   })
-  users: { user: Types.ObjectId | User; signoutDate: Date; signinDate: Date, approve: string }[];
+  users: { user: Types.ObjectId | User; signoutDate: Date; proposedSigninDate: Date, actualSigninDate: Date, approve: string }[];
 }
 
 export type WeaponDocument = Weapon & Document;

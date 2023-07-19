@@ -111,16 +111,23 @@ let AuthService = class AuthService {
             console.log("hey");
             const user = await this.userModel.findById(userId).populate("unit");
             console.log(user);
-            if (user.categoryName === "Battalion" ||
-                user.categoryName === "Brigade" ||
-                user.categoryName === "Division") {
-                await this.userModel.findByIdAndUpdate(userId, {
-                    role: user_schema_1.UserRole.UnitCommander,
-                });
-                return {
-                    message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
-                };
-            }
+            await this.userModel.findByIdAndUpdate(userId, {
+                role: user_schema_1.UserRole.UnitCommander,
+            });
+            return {
+                message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
+            };
+        }
+    }
+    async appointAmourer(id, data) {
+        const { userId } = data;
+        const commProfile = await this.userModel.findById(id).populate("unit");
+        const user = await this.userModel.findById(userId).populate("unit");
+        if (commProfile.role === user_schema_1.UserRole.UnitCommander && commProfile.unit._id.toString() === user.unit._id.toString()) {
+            await this.userModel.findByIdAndUpdate(userId, {
+                role: user_schema_1.UserRole.Amourer,
+            });
+            return { message: "Successful" };
         }
     }
     async registerWeapon(id, weaponData) {
@@ -177,10 +184,30 @@ let AuthService = class AuthService {
         const user = await this.userModel.findById(id).populate("unit");
         return await this.weaponsService.weaponsAwaitApproval(user.unit._id);
     }
+    async weaponsAwaitRelease(id) {
+        const user = await this.userModel.findById(id).populate("unit");
+        return await this.weaponsService.weaponsAwaitRelease(user.unit._id);
+    }
+    async releasedWeapons(id) {
+        const user = await this.userModel.findById(id).populate("unit");
+        return await this.weaponsService.releasedWeapons(user.unit._id);
+    }
     async approveWeapon(id, data) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "Unit Commander") {
+        if (user.role === user_schema_1.UserRole.UnitCommander) {
             return await this.weaponsService.approveWeapon(user.unit._id, data);
+        }
+    }
+    async releaseWeapon(id, data) {
+        const user = await this.userModel.findById(id).populate("unit");
+        if (user.role === user_schema_1.UserRole.Amourer) {
+            return await this.weaponsService.releaseWeapon(user.unit._id, data);
+        }
+    }
+    async retrieveWeapon(id, data) {
+        const user = await this.userModel.findById(id).populate("unit");
+        if (user.role === user_schema_1.UserRole.Amourer) {
+            return await this.weaponsService.retrieveWeapon(user.unit._id, data);
         }
     }
     async weaponHistory(id) {
@@ -189,6 +216,10 @@ let AuthService = class AuthService {
     }
     async getAllUsers() {
         return await this.userModel.find();
+    }
+    async getAllUnitUsers(id) {
+        const user = await this.userModel.findById(id).populate("unit");
+        return await this.userModel.find({ unit: user.unit._id });
     }
 };
 AuthService = __decorate([

@@ -9,11 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserSchema = exports.User = exports.Hash = exports.UserRole = void 0;
+exports.UserSchema = exports.User = exports.UserRole = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const unit_schema_1 = require("../../categories/schema/unit.schema");
-const bcrypt = require("bcrypt");
 var UserRole;
 (function (UserRole) {
     UserRole["UnitMember"] = "Unit Member";
@@ -21,17 +20,8 @@ var UserRole;
     UserRole["BrigadeCommander"] = "Brigade Commander";
     UserRole["DivisionCommander"] = "Division Commander";
     UserRole["SuperAdmin"] = "Super Admin";
+    UserRole["Amourer"] = "Amourer";
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
-class Hash {
-    static make(plainText) {
-        const salt = bcrypt.genSaltSync();
-        return bcrypt.hashSync(plainText, salt);
-    }
-    static compare(plainText, hash) {
-        return bcrypt.compareSync(plainText, hash);
-    }
-}
-exports.Hash = Hash;
 let User = class User {
 };
 __decorate([

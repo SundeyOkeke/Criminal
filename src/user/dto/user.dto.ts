@@ -28,7 +28,7 @@ export class LoginDto {
   readonly password: string;
 }
 
-export class AppointCommDto {
+export class AppointDto {
   @IsString()
   @IsNotEmpty()
   readonly userId: string;

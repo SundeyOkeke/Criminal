@@ -26,7 +26,7 @@ import { Model } from "mongoose";
 import { User } from "./schema/user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { CategoryService } from "src/categories/category.service";
-import { AppointCommDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { WeaponDto } from "src/weapons/dto/weapons.dto";
 import { Weapon } from "src/weapons/schema/weapons.schema";
 import { WeaponsService } from "src/weapons/weapons.service";
@@ -45,13 +45,16 @@ export declare class AuthService {
             _id: import("mongoose").Types.ObjectId;
         }, never>;
     }>;
-    appointDivisionComm(id: any, data: AppointCommDto): Promise<{
+    appointDivisionComm(id: any, data: AppointDto): Promise<{
         message: string;
     }>;
-    appointBrigadeComm(id: any, data: AppointCommDto): Promise<{
+    appointBrigadeComm(id: any, data: AppointDto): Promise<{
         message: string;
     }>;
-    appointBattalionComm(id: any, data: AppointCommDto): Promise<{
+    appointBattalionComm(id: any, data: AppointDto): Promise<{
+        message: string;
+    }>;
+    appointAmourer(id: any, data: AppointDto): Promise<{
         message: string;
     }>;
     registerWeapon(id: any, weaponData: WeaponDto): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
@@ -70,13 +73,28 @@ export declare class AuthService {
     weaponsAwaitApproval(id: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>, never>[]>;
+    weaponsAwaitRelease(id: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>, never>[]>;
+    releasedWeapons(id: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>, never>[]>;
     approveWeapon(id: any, data: any): Promise<{
+        message: string;
+    }>;
+    releaseWeapon(id: any, data: any): Promise<{
+        message: string;
+    }>;
+    retrieveWeapon(id: any, data: any): Promise<{
         message: string;
     }>;
     weaponHistory(id: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
     getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, User> & Omit<User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
+    getAllUnitUsers(id: any): Promise<(import("mongoose").Document<unknown, {}, User> & Omit<User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
 }

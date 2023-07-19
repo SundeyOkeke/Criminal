@@ -42,6 +42,10 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.appointBattalionComm(id, data);
     }
+    appointAmourer(req, data) {
+        const id = req.user.id;
+        return this.authService.appointAmourer(id, data);
+    }
     registerWeapon(req, data) {
         const id = req.user.id;
         return this.authService.registerWeapon(id, data);
@@ -62,9 +66,25 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.weaponsAwaitApproval(id);
     }
+    weaponsAwaitRelease(req) {
+        const id = req.user.id;
+        return this.authService.weaponsAwaitRelease(id);
+    }
+    releasedWeapons(req) {
+        const id = req.user.id;
+        return this.authService.releasedWeapons(id);
+    }
     approveWeapon(req, data) {
         const id = req.user.id;
         return this.authService.approveWeapon(id, data);
+    }
+    releaseWeapon(req, data) {
+        const id = req.user.id;
+        return this.authService.releaseWeapon(id, data);
+    }
+    retrieveWeapon(req, data) {
+        const id = req.user.id;
+        return this.authService.retrieveWeapon(id, data);
     }
     weaponHistory(req) {
         const id = req.user.id;
@@ -72,6 +92,10 @@ let AuthController = class AuthController {
     }
     getAllUsers() {
         return this.authService.getAllUsers();
+    }
+    getAllUnitUsers(req) {
+        const id = req.user.id;
+        return this.authService.getAllUnitUsers(id);
     }
     getUserByProvidedId(userId) {
         return this.authService.getUserById(userId);
@@ -97,7 +121,7 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.AppointCommDto]),
+    __metadata("design:paramtypes", [Object, user_dto_1.AppointDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointDivisionComm", null);
 __decorate([
@@ -106,7 +130,7 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.AppointCommDto]),
+    __metadata("design:paramtypes", [Object, user_dto_1.AppointDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBrigadeComm", null);
 __decorate([
@@ -115,9 +139,18 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.AppointCommDto]),
+    __metadata("design:paramtypes", [Object, user_dto_1.AppointDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBattalionComm", null);
+__decorate([
+    (0, common_1.Put)("/appoint/amourer"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, user_dto_1.AppointDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "appointAmourer", null);
 __decorate([
     (0, common_1.Post)("/register/weapon"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -162,6 +195,22 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "weaponsAwaitApproval", null);
 __decorate([
+    (0, common_1.Get)("/weapons/await-release"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "weaponsAwaitRelease", null);
+__decorate([
+    (0, common_1.Get)("/released/weapons"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "releasedWeapons", null);
+__decorate([
     (0, common_1.Patch)("/approve/weapon"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
@@ -170,6 +219,24 @@ __decorate([
     __metadata("design:paramtypes", [Object, weapons_dto_1.approveWeaponDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "approveWeapon", null);
+__decorate([
+    (0, common_1.Patch)("/release/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.releaseWeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "releaseWeapon", null);
+__decorate([
+    (0, common_1.Patch)("/retrieve/weapon"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, weapons_dto_1.retrieveWeaponDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "retrieveWeapon", null);
 __decorate([
     (0, common_1.Get)("/weapon/history"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -185,6 +252,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getAllUsers", null);
+__decorate([
+    (0, common_1.Get)("/all/unit-users"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getAllUnitUsers", null);
 __decorate([
     (0, common_1.Get)('/get/user-id/:userId'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

@@ -14,13 +14,12 @@ export class Hash {
 }
 
 
-export function convertDateFormat(dateString) {
-    const dateParts = dateString.split("/");
-    const [day, month, year] = dateParts;
-  
-    const date = new Date(`${year}-${month}-${day}`);
-    const formattedDate = date.toISOString();
-  
-    return formattedDate;
-  }
+export function convertDateTimeFormat(dateTimeString) {
+  const [time, date] = dateTimeString.split(" ");
+  const [hour, minute] = time.split(":");
+  const [day, month, year] = date.split("/");
+
+  const formattedDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000Z`);
+  return formattedDate.toISOString();
+}
 

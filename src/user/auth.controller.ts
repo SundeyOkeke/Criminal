@@ -10,9 +10,9 @@ import {
   Patch,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AppointCommDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
+import { AppointDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
-import { CategoryWeaponDto, WeaponDto, approveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
+import { CategoryWeaponDto, WeaponDto, approveWeaponDto, releaseWeaponDto, retrieveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
 
 @Controller("user")
@@ -34,23 +34,30 @@ export class AuthController {
 
   @Put("/appoint/division/comm")
   @UseGuards(JwtAuthGuard)
-  appointDivisionComm(@Req() req, @Body() data: AppointCommDto) {
+  appointDivisionComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointDivisionComm(id, data);
   }
 
   @Put("/appoint/brigade/comm")
   @UseGuards(JwtAuthGuard)
-  appointBrigadeComm(@Req() req, @Body() data: AppointCommDto) {
+  appointBrigadeComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointBrigadeComm(id, data);
   }
 
   @Put("/appoint/battalion/comm")
   @UseGuards(JwtAuthGuard)
-  appointBattalionComm(@Req() req, @Body() data: AppointCommDto) {
+  appointBattalionComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointBattalionComm(id, data);
+  }
+
+  @Put("/appoint/amourer")
+  @UseGuards(JwtAuthGuard)
+  appointAmourer(@Req() req, @Body() data: AppointDto) {
+    const id: string = req.user.id;
+    return this.authService.appointAmourer(id, data);
   }
 
   @Post("/register/weapon")
@@ -88,11 +95,39 @@ export class AuthController {
     return this.authService.weaponsAwaitApproval(id);
   }
 
+  @Get("/weapons/await-release")
+  @UseGuards(JwtAuthGuard)
+  weaponsAwaitRelease(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.weaponsAwaitRelease(id);
+  }
+
+  @Get("/released/weapons")
+  @UseGuards(JwtAuthGuard)
+  releasedWeapons(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.releasedWeapons(id);
+  }
+
   @Patch("/approve/weapon")
   @UseGuards(JwtAuthGuard)
   approveWeapon(@Req() req, @Body() data: approveWeaponDto) {
     const id: string = req.user.id;
     return this.authService.approveWeapon(id,data);
+  }
+
+  @Patch("/release/weapon")
+  @UseGuards(JwtAuthGuard)
+  releaseWeapon(@Req() req, @Body() data: releaseWeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.releaseWeapon(id,data);
+  }
+
+  @Patch("/retrieve/weapon")
+  @UseGuards(JwtAuthGuard)
+  retrieveWeapon(@Req() req, @Body() data: retrieveWeaponDto) {
+    const id: string = req.user.id;
+    return this.authService.retrieveWeapon(id,data);
   }
 
   @Get("/weapon/history")
@@ -106,6 +141,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getAllUsers() {
     return this.authService.getAllUsers();
+  }
+
+  @Get("/all/unit-users")
+  @UseGuards(JwtAuthGuard)
+  getAllUnitUsers(@Req() req) {
+    const id: string = req.user.id;
+    return this.authService.getAllUnitUsers(id);
   }
 
   @Get('/get/user-id/:userId')
