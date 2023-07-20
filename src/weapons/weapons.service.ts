@@ -266,9 +266,9 @@ export class WeaponsService {
   
   async retrieveWeapon(unit, data) {
     const { weaponId, condition } = data;
-    console.log(unit);
+    console.log(data)
     const weapon = await this.weaponModel.findById(weaponId);
-    console.log("heyhey");
+    console.log("heyhey", weapon);
     if (weapon.unit._id.toString() === unit.toString()) {
       console.log("hey");
       

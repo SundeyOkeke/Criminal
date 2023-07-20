@@ -60,9 +60,12 @@ let AuthService = class AuthService {
         const user = await this.userModel
             .findOne({ serviceNumber })
             .populate("unit");
-        const confirmPassword = utils_1.Hash.compare(password, user.password);
         console.log(user);
-        if (!user || !confirmPassword) {
+        if (!user) {
+            throw new common_1.UnauthorizedException("Invalid Credentials");
+        }
+        const confirmPassword = utils_1.Hash.compare(password, user.password);
+        if (!confirmPassword) {
             throw new common_1.UnauthorizedException("Invalid Credentials");
         }
         const payload = {

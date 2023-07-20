@@ -68,11 +68,15 @@ export class AuthService {
       .findOne({ serviceNumber })
       .populate("unit");
 
-    const confirmPassword = Hash.compare(password, user.password)
 
 
     console.log(user);
-    if (!user || !confirmPassword) {
+    if (!user ) {
+      throw new UnauthorizedException("Invalid Credentials");
+    }
+    const confirmPassword = Hash.compare(password, user.password)
+
+    if (!confirmPassword) {
       throw new UnauthorizedException("Invalid Credentials");
     }
 
