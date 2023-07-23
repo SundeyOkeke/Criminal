@@ -22,3 +22,11 @@ export declare class retrieveWeaponDto {
     readonly weaponId: string;
     readonly condition: string;
 }
+export interface UserData {
+    name: string;
+    serialNumber: string;
+    availability: string;
+    signoutDate: Date;
+    actualSigninDate: Date | null;
+    approve: string;
+}

@@ -82,9 +82,7 @@ export declare class AuthController {
     retrieveWeapon(req: any, data: retrieveWeaponDto): Promise<{
         message: string;
     }>;
-    weaponHistory(req: any): Promise<(import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
-        _id: import("mongoose").Types.ObjectId;
-    }, never>)[]>;
+    weaponHistory(req: any): Promise<import("src/weapons/dto/weapons.dto").UserData[]>;
     getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
@@ -94,4 +92,7 @@ export declare class AuthController {
     getUserByProvidedId(userId: string): Promise<import("mongoose").Document<unknown, {}, import("./schema/user.schema").User> & Omit<import("./schema/user.schema").User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
+    getUnitWeapons(unitId: string): Promise<Omit<import("mongoose").Document<unknown, {}, import("../weapons/schema/weapons.schema").Weapon> & Omit<import("../weapons/schema/weapons.schema").Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>, never>[]>;
 }

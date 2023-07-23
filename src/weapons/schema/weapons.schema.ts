@@ -6,6 +6,7 @@ import { User } from "src/user/schema/user.schema";
 export enum Availability {
   Available = "available",
   SignedOut = "signed out",
+  Missing = "missing",
 }
 
 export enum Approval {
@@ -19,7 +20,6 @@ export enum Condition {
   Good = "Good",
   Bad = "Bad",
 }
-
 
 @Schema({ timestamps: true })
 export class Weapon {
@@ -45,10 +45,24 @@ export class Weapon {
   unit: Unit;
 
   @Prop({
-    type: [{ user: { type: SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, proposedSigninDate: Date, actualSigninDate: Date, approve: String  }],
+    type: [
+      {
+        user: { type: SchemaTypes.ObjectId, ref: "User" },
+        signoutDate: Date,
+        proposedSigninDate: Date,
+        actualSigninDate: Date,
+        approve: String,
+      },
+    ],
     default: [],
   })
-  users: { user: Types.ObjectId | User; signoutDate: Date; proposedSigninDate: Date, actualSigninDate: Date, approve: string }[];
+  users: {
+    user: Types.ObjectId | User;
+    signoutDate: Date;
+    proposedSigninDate: Date;
+    actualSigninDate: Date;
+    approve: string;
+  }[];
 }
 
 export type WeaponDocument = Weapon & Document;

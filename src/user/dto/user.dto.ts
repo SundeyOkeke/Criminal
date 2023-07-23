@@ -38,5 +38,4 @@ export class userIdDto {
   @IsString()
   @IsNotEmpty()
   readonly userId: string;
-
 }

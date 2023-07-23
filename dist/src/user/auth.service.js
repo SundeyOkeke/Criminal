@@ -36,7 +36,6 @@ let AuthService = class AuthService {
                 throw new common_1.UnauthorizedException("Service Number already exists");
             }
             const userUnit = await this.categoryService.findOneUnit(unit);
-            console.log(userUnit);
             const createUser = await this.userModel.create({
                 name,
                 password: utils_1.Hash.make(password),
@@ -46,7 +45,6 @@ let AuthService = class AuthService {
             });
             return createUser;
         }
-        console.log("hey", data);
         const createUser = await this.userModel.create({
             name: name,
             password: utils_1.Hash.make(password),
@@ -60,7 +58,6 @@ let AuthService = class AuthService {
         const user = await this.userModel
             .findOne({ serviceNumber })
             .populate("unit");
-        console.log(user);
         if (!user) {
             throw new common_1.UnauthorizedException("Invalid Credentials");
         }
@@ -80,7 +77,6 @@ let AuthService = class AuthService {
         const { userId } = data;
         const user = await this.userModel.findById(id);
         if (user.role === "Super Admin") {
-            console.log("hey");
             const user = await this.userModel.findById(userId);
             if (user.categoryName === "Division") {
                 await this.userModel.findByIdAndUpdate(userId, {
@@ -94,9 +90,7 @@ let AuthService = class AuthService {
         const { userId } = data;
         const user = await this.userModel.findById(id);
         if (user.role === "Super Admin") {
-            console.log("hey");
             const user = await this.userModel.findById(userId);
-            console.log(user);
             if (user.categoryName === "Brigade") {
                 await this.userModel.findByIdAndUpdate(userId, {
                     role: user_schema_1.UserRole.BrigadeCommander,
@@ -111,9 +105,7 @@ let AuthService = class AuthService {
         if (user.role === "Brigade Commander" ||
             user.role === "Division Commander" ||
             user.role === "Super Admin") {
-            console.log("hey");
             const user = await this.userModel.findById(userId).populate("unit");
-            console.log(user);
             await this.userModel.findByIdAndUpdate(userId, {
                 role: user_schema_1.UserRole.UnitCommander,
             });
@@ -139,7 +131,6 @@ let AuthService = class AuthService {
             const commanderData = {
                 unitId: user.unit._id,
             };
-            console.log(commanderData);
             return await this.weaponsService.createWeapon(commanderData, weaponData);
         }
     }
@@ -162,10 +153,7 @@ let AuthService = class AuthService {
         const { weaponId, returnDate } = data;
         const user = await this.userModel.findById(id).populate("unit");
         const weapon = await this.weaponsService.getWeaponById(weaponId);
-        console.log(user.unit._id);
-        console.log(weapon.unit._id);
         if (user.unit._id.toString() === weapon.unit._id.toString()) {
-            console.log("hey");
             return await this.weaponsService.signoutWeapon(user, data);
         }
         throw new common_1.UnauthorizedException("Unauthorised");

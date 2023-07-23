@@ -42,14 +42,12 @@ export class approveWeaponDto {
   @IsString()
   @IsNotEmpty()
   readonly weaponId: string;
-
 }
 
 export class releaseWeaponDto {
   @IsString()
   @IsNotEmpty()
   readonly weaponId: string;
-
 }
 
 export class retrieveWeaponDto {
@@ -62,3 +60,11 @@ export class retrieveWeaponDto {
   readonly condition: string;
 }
 
+export interface UserData {
+  name: string;
+  serialNumber: string;
+  availability: string;
+  signoutDate: Date; // Explicitly define the type as Date
+  actualSigninDate: Date | null;
+  approve: string;
+}

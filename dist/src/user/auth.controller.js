@@ -100,6 +100,9 @@ let AuthController = class AuthController {
     getUserByProvidedId(userId) {
         return this.authService.getUserById(userId);
     }
+    getUnitWeapons(unitId) {
+        return this.weaponsService.getUnitWeapons(unitId);
+    }
 };
 __decorate([
     (0, common_1.Post)("/register"),
@@ -261,13 +264,21 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getAllUnitUsers", null);
 __decorate([
-    (0, common_1.Get)('/get/user-id/:userId'),
+    (0, common_1.Get)("/get/user-id/:userId"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)('userId')),
+    __param(0, (0, common_1.Param)("userId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUserByProvidedId", null);
+__decorate([
+    (0, common_1.Get)("/get/unit/weapons/:unitId"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Param)("unitId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getUnitWeapons", null);
 AuthController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

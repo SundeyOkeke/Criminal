@@ -5,8 +5,14 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Approval, Availability, Condition, Weapon } from "./schema/weapons.schema";
+import {
+  Approval,
+  Availability,
+  Condition,
+  Weapon,
+} from "./schema/weapons.schema";
 import { convertDateTimeFormat } from "src/utils/utils";
+import { UserData } from "./dto/weapons.dto";
 
 @Injectable()
 export class WeaponsService {
@@ -14,19 +20,20 @@ export class WeaponsService {
 
   async createWeapon(commanderData, weaponData) {
     const { unitId } = commanderData;
-    console.log(unitId);
     return await this.weaponModel.create({ ...weaponData, unit: unitId });
   }
 
   async getWeaponsByUnitMem(commanderData) {
     const { unitId } = commanderData;
-    console.log(unitId);
-    return await this.weaponModel.find({ unit: unitId, availability: "available", condition : Condition.Good }) 
-   }
+    return await this.weaponModel.find({
+      unit: unitId,
+      availability: "available",
+      condition: Condition.Good,
+    });
+  }
 
   async getWeaponsByComm(commanderData) {
     const { unitId } = commanderData;
-    console.log(unitId);
     return await this.weaponModel.find({ unit: unitId });
   }
 
@@ -169,22 +176,20 @@ export class WeaponsService {
     const { weaponId, returnDate } = data;
     const { _id: userId } = user;
 
-  
     const updateData = {
       user: userId,
       signoutDate: new Date(),
       proposedSigninDate: convertDateTimeFormat(returnDate),
-      approve : Approval.AwaitingApproval,
-      actualSigninDate : ""
+      approve: Approval.AwaitingApproval,
+      actualSigninDate: "",
     };
-  
+
     const signoutWeapon = await this.weaponModel.findByIdAndUpdate(
       weaponId,
-      { $push: { users: updateData }, availability:Availability.SignedOut  },
+      { $push: { users: updateData }, availability: Availability.SignedOut },
       { new: true }
     );
-    console.log(signoutWeapon)
-    return signoutWeapon
+    return signoutWeapon;
   }
 
   async getWeaponById(id) {
@@ -192,116 +197,135 @@ export class WeaponsService {
   }
 
   async weaponsAwaitApproval(unit) {
-    console.log(unit);
-    return await this.weaponModel.find({
-      unit: unit,
-      availability : "signed out",
-      "users": {
-        $elemMatch: { "approve": Approval.AwaitingApproval }
-      }
-    }).populate("users.user");
+    return await this.weaponModel
+      .find({
+        unit: unit,
+        availability: "signed out",
+        users: {
+          $elemMatch: { approve: Approval.AwaitingApproval },
+        },
+      })
+      .populate("users.user");
   }
 
-  
   async weaponsAwaitRelease(unit) {
-    console.log(unit);
-    return await this.weaponModel.find({
-      unit: unit,
-      availability : "signed out",
-      "users": {
-        $elemMatch: { "approve": Approval.AwaitingRelease }
-      }
-    }).populate("users.user");
+    return await this.weaponModel
+      .find({
+        unit: unit,
+        availability: "signed out",
+        users: {
+          $elemMatch: { approve: Approval.AwaitingRelease },
+        },
+      })
+      .populate("users.user");
   }
-  
+
   async releasedWeapons(unit) {
-    console.log(unit);
-    return await this.weaponModel.find({
-      unit: unit,
-      availability : "signed out",
-      "users": {
-        $elemMatch: { "approve": Approval.Released }
-      }
-    }).populate("users.user");
+    return await this.weaponModel
+      .find({
+        unit: unit,
+        availability: "signed out",
+        users: {
+          $elemMatch: { approve: Approval.Released },
+        },
+      })
+      .populate("users.user");
   }
 
   async approveWeapon(unit, data) {
     const { weaponId } = data;
-    console.log(unit);
     const weapon = await this.weaponModel.findById(weaponId);
-    console.log("heyhey");
     if (weapon.unit._id.toString() === unit.toString()) {
-      console.log("hey");
-      
       weapon.users.forEach((user) => {
         if (user.approve === Approval.AwaitingApproval) {
           user.approve = Approval.AwaitingRelease;
         }
       });
-      
+
       await weapon.save();
-      return {message : "Successful"}
+      return { message: "Successful" };
     }
   }
-  
+
   async releaseWeapon(unit, data) {
     const { weaponId } = data;
-    console.log(unit);
     const weapon = await this.weaponModel.findById(weaponId);
-    console.log("heyhey");
     if (weapon.unit._id.toString() === unit.toString()) {
-      console.log("hey");
-      
       weapon.users.forEach((user) => {
         if (user.approve === Approval.AwaitingRelease) {
           user.approve = Approval.Released;
         }
       });
-      
+
       await weapon.save();
-      return {message : "Successful"}
+      return { message: "Successful" };
     }
   }
 
-  
   async retrieveWeapon(unit, data) {
     const { weaponId, condition } = data;
-    console.log(data)
     const weapon = await this.weaponModel.findById(weaponId);
-    console.log("heyhey", weapon);
     if (weapon.unit._id.toString() === unit.toString()) {
-      console.log("hey");
-      
+      if (condition === Availability.Missing) {
+        weapon.users.forEach((user) => {
+          if (user.approve === Approval.Released) {
+            user.actualSigninDate = new Date();
+          }
+        });
+        (weapon.availability = Availability.Missing), await weapon.save();
+        return { message: "Successful" };
+      }
+
       weapon.users.forEach((user) => {
         if (user.approve === Approval.Released) {
           user.approve = Approval.SigninApproved;
-          user.actualSigninDate = new Date()
+          user.actualSigninDate = new Date();
         }
       });
-      weapon.availability =  Availability.Available,
-      weapon.condition = condition
-      
-      
+      (weapon.availability = Availability.Available),
+        (weapon.condition = condition);
+
       await weapon.save();
-      return {message : "Successful"}
+      return { message: "Successful" };
     }
   }
 
-  async weaponHistory(userId) {
+  async weaponHistory(userId): Promise<UserData[]> {
     const weapons = await this.weaponModel.find({
       $or: [
-        { availability: Availability.SignedOut, 'users.user': userId },
-        { availability: Availability.Available, 'users.user': userId }
-      ]
+        { availability: Availability.SignedOut, "users.user": userId },
+        { availability: Availability.Available, "users.user": userId },
+        { availability: Availability.Missing, "users.user": userId },
+      ],
     });
-  
+
     const filteredWeapons = weapons.map((weapon) => {
-      weapon.users = weapon.users.filter((user) => user.user.toString() === userId.toString());
-      return weapon;
+      const usersData = weapon.users
+        .filter((user) => user.user.toString() === userId.toString())
+        .map((user) => ({
+          name: weapon.name,
+          serialNumber: weapon.serialNumber,
+          availability: weapon.availability,
+          signoutDate: user.signoutDate,
+          actualSigninDate: user.actualSigninDate,
+          approve: user.approve,
+        }));
+
+      return usersData;
     });
-  
-    return filteredWeapons;
+
+    // Flatten the filteredWeapons array and sort based on signoutDate
+    const flattenedWeapons = filteredWeapons
+      .flat()
+      .sort((a: UserData, b: UserData) => {
+        return (
+          new Date(a.signoutDate).getTime() - new Date(b.signoutDate).getTime()
+        );
+      });
+
+    return flattenedWeapons;
+  }
+  async getUnitWeapons(unitId) {
+    return await this.weaponModel.find({ unit: unitId }).populate("unit");
   }
 }
-
-

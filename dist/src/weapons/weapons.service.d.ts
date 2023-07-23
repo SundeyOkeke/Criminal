@@ -24,6 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Model } from "mongoose";
 import { Weapon } from "./schema/weapons.schema";
+import { UserData } from "./dto/weapons.dto";
 export declare class WeaponsService {
     private weaponModel;
     constructor(weaponModel: Model<Weapon>);
@@ -60,7 +61,8 @@ export declare class WeaponsService {
     retrieveWeapon(unit: any, data: any): Promise<{
         message: string;
     }>;
-    weaponHistory(userId: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+    weaponHistory(userId: any): Promise<UserData[]>;
+    getUnitWeapons(unitId: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
-    }, never>)[]>;
+    }, never>, never>[]>;
 }

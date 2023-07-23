@@ -12,7 +12,14 @@ import {
 import { AuthService } from "./auth.service";
 import { AppointDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
-import { CategoryWeaponDto, WeaponDto, approveWeaponDto, releaseWeaponDto, retrieveWeaponDto, signoutWeaponDto } from "src/weapons/dto/weapons.dto";
+import {
+  CategoryWeaponDto,
+  WeaponDto,
+  approveWeaponDto,
+  releaseWeaponDto,
+  retrieveWeaponDto,
+  signoutWeaponDto,
+} from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
 
 @Controller("user")
@@ -20,7 +27,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private weaponsService: WeaponsService
-    ) {}
+  ) {}
 
   @Post("/register")
   register(@Body() data: RegisterDto) {
@@ -113,21 +120,21 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   approveWeapon(@Req() req, @Body() data: approveWeaponDto) {
     const id: string = req.user.id;
-    return this.authService.approveWeapon(id,data);
+    return this.authService.approveWeapon(id, data);
   }
 
   @Patch("/release/weapon")
   @UseGuards(JwtAuthGuard)
   releaseWeapon(@Req() req, @Body() data: releaseWeaponDto) {
     const id: string = req.user.id;
-    return this.authService.releaseWeapon(id,data);
+    return this.authService.releaseWeapon(id, data);
   }
 
   @Patch("/retrieve/weapon")
   @UseGuards(JwtAuthGuard)
   retrieveWeapon(@Req() req, @Body() data: retrieveWeaponDto) {
     const id: string = req.user.id;
-    return this.authService.retrieveWeapon(id,data);
+    return this.authService.retrieveWeapon(id, data);
   }
 
   @Get("/weapon/history")
@@ -150,9 +157,15 @@ export class AuthController {
     return this.authService.getAllUnitUsers(id);
   }
 
-  @Get('/get/user-id/:userId')
-@UseGuards(JwtAuthGuard)
-getUserByProvidedId(@Param('userId') userId: string) {
-  return this.authService.getUserById(userId);
-}
+  @Get("/get/user-id/:userId")
+  @UseGuards(JwtAuthGuard)
+  getUserByProvidedId(@Param("userId") userId: string) {
+    return this.authService.getUserById(userId);
+  }
+
+  @Get("/get/unit/weapons/:unitId")
+  @UseGuards(JwtAuthGuard)
+  getUnitWeapons(@Param("unitId") unitId: string) {
+    return this.weaponsService.getUnitWeapons(unitId);
+  }
 }

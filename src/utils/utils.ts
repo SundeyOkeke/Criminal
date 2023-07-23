@@ -1,5 +1,5 @@
-import * as bcrypt from 'bcrypt';
-import { ValueTransformer } from 'typeorm';
+import * as bcrypt from "bcrypt";
+import { ValueTransformer } from "typeorm";
 
 // TODO[Security] Suggestion: choose more complex password hashing algorithm.
 export class Hash {
@@ -13,13 +13,13 @@ export class Hash {
   }
 }
 
-
 export function convertDateTimeFormat(dateTimeString) {
   const [time, date] = dateTimeString.split(" ");
   const [hour, minute] = time.split(":");
   const [day, month, year] = date.split("/");
 
-  const formattedDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000Z`);
+  const formattedDate = new Date(
+    `${year}-${month}-${day}T${hour}:${minute}:00.000Z`
+  );
   return formattedDate.toISOString();
 }
-

@@ -17,6 +17,7 @@ var Availability;
 (function (Availability) {
     Availability["Available"] = "available";
     Availability["SignedOut"] = "signed out";
+    Availability["Missing"] = "missing";
 })(Availability = exports.Availability || (exports.Availability = {}));
 var Approval;
 (function (Approval) {

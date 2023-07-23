@@ -27,7 +27,8 @@ import { Unit } from "src/categories/schema/unit.schema";
 import { User } from "src/user/schema/user.schema";
 export declare enum Availability {
     Available = "available",
-    SignedOut = "signed out"
+    SignedOut = "signed out",
+    Missing = "missing"
 }
 export declare enum Approval {
     AwaitingApproval = "Awaiting Approval",

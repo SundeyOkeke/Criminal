@@ -88,9 +88,7 @@ export declare class AuthService {
     retrieveWeapon(id: any, data: any): Promise<{
         message: string;
     }>;
-    weaponHistory(id: any): Promise<(import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
-        _id: import("mongoose").Types.ObjectId;
-    }, never>)[]>;
+    weaponHistory(id: any): Promise<import("src/weapons/dto/weapons.dto").UserData[]>;
     getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, User> & Omit<User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;

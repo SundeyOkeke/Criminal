@@ -2,10 +2,8 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, SchemaTypes } from "mongoose";
 import { Unit } from "src/categories/schema/unit.schema";
 // import { PasswordTransformer } from "src/utils/utils";
-import { ValueTransformer } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-
-
+import { ValueTransformer } from "typeorm";
+import * as bcrypt from "bcrypt";
 
 export enum UserRole {
   UnitMember = "Unit Member",
@@ -15,10 +13,6 @@ export enum UserRole {
   SuperAdmin = "Super Admin",
   Amourer = "Amourer",
 }
-
-
-
-
 
 @Schema({ timestamps: true })
 export class User {
