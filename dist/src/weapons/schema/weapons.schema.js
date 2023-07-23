@@ -63,7 +63,15 @@ __decorate([
 ], Weapon.prototype, "unit", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
-        type: [{ user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" }, signoutDate: Date, proposedSigninDate: Date, actualSigninDate: Date, approve: String }],
+        type: [
+            {
+                user: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" },
+                signoutDate: Date,
+                proposedSigninDate: Date,
+                actualSigninDate: Date,
+                approve: String,
+            },
+        ],
         default: [],
     }),
     __metadata("design:type", Array)

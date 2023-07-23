@@ -118,7 +118,8 @@ let AuthService = class AuthService {
         const { userId } = data;
         const commProfile = await this.userModel.findById(id).populate("unit");
         const user = await this.userModel.findById(userId).populate("unit");
-        if (commProfile.role === user_schema_1.UserRole.UnitCommander && commProfile.unit._id.toString() === user.unit._id.toString()) {
+        if (commProfile.role === user_schema_1.UserRole.UnitCommander &&
+            commProfile.unit._id.toString() === user.unit._id.toString()) {
             await this.userModel.findByIdAndUpdate(userId, {
                 role: user_schema_1.UserRole.Amourer,
             });
@@ -136,13 +137,15 @@ let AuthService = class AuthService {
     }
     async getWeapons(id, data) {
         const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "Unit Member") {
+        if (user.role === "Unit Member" || "Amourer") {
             const userData = {
                 unitId: user.unit._id,
             };
             return await this.weaponsService.getWeaponsByUnitMem(userData);
         }
-        if (user.role === "Unit Commander" || user.role === "Brigade Commander" || user.role === "Division Commander") {
+        if (user.role === "Unit Commander" ||
+            user.role === "Brigade Commander" ||
+            user.role === "Division Commander") {
             const commanderData = {
                 unitId: user.unit._id,
             };
