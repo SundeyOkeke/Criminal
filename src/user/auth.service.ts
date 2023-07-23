@@ -159,12 +159,15 @@ export class AuthService {
 
   async getWeapons(id, data) {
     const user = await this.userModel.findById(id).populate("unit");
-    if (user.role === "Unit Member" || "Amourer") {
+    console.log(user.role)
+
+    if (user.role === "Unit Member" || user.role === "Amourer") {
       const userData = {
         unitId: user.unit._id,
       };
       return await this.weaponsService.getWeaponsByUnitMem(userData);
     }
+
     if (
       user.role === "Unit Commander" ||
       user.role === "Brigade Commander" ||
