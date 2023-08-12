@@ -95,4 +95,7 @@ export declare class AuthService {
     getAllUnitUsers(id: any): Promise<(import("mongoose").Document<unknown, {}, User> & Omit<User & {
         _id: import("mongoose").Types.ObjectId;
     }, never>)[]>;
+    getWeaponByArmType(id: any, armType: any): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
 }

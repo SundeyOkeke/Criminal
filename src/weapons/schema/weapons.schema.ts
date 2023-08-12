@@ -21,6 +21,15 @@ export enum Condition {
   Bad = "Bad",
 }
 
+export enum ArmType {
+  AK47 = "AK47",
+  Pistol = "Pistol",
+  FNRifles = "FN Rifles",
+  AK47Bullet = "AK47 Bullet",
+  PistolBullet = "Pistol Bullet",
+  FNRiflesBullet = "FNRifles Bullet",
+}
+
 @Schema({ timestamps: true })
 export class Weapon {
   @Prop({ required: true })
@@ -41,6 +50,9 @@ export class Weapon {
   @Prop({ enum: Condition })
   condition: Condition;
 
+  @Prop({ enum: ArmType })
+  armType: ArmType;
+
   @Prop({ type: SchemaTypes.ObjectId, ref: "Unit" })
   unit: Unit;
 
@@ -52,6 +64,10 @@ export class Weapon {
         proposedSigninDate: Date,
         actualSigninDate: Date,
         approve: String,
+        approvedBy: { type: SchemaTypes.ObjectId, ref: "User" },
+        releasedBy: { type: SchemaTypes.ObjectId, ref: "User" },
+        retrievedBy: { type: SchemaTypes.ObjectId, ref: "User" },
+        note: String,
       },
     ],
     default: [],
@@ -62,6 +78,10 @@ export class Weapon {
     proposedSigninDate: Date;
     actualSigninDate: Date;
     approve: string;
+    approvedBy: Types.ObjectId | User;
+    releasedBy: Types.ObjectId | User;
+    retrievedBy: Types.ObjectId | User;
+    note: string;
   }[];
 }
 

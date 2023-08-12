@@ -54,6 +54,9 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.getWeapons(id, data);
     }
+    allWeapons() {
+        return this.weaponsService.allWeapons();
+    }
     signoutWeapon(req, data) {
         const id = req.user.id;
         return this.authService.signoutWeapon(id, data);
@@ -61,6 +64,14 @@ let AuthController = class AuthController {
     getUserById(req) {
         const id = req.user.id;
         return this.authService.getUserById(id);
+    }
+    getWeaponById(weaponId) {
+        return this.weaponsService.getWeaponById(weaponId);
+    }
+    getWeaponByArmType(req, armType) {
+        const id = req.user.id;
+        console.log(armType);
+        return this.authService.getWeaponByArmType(id, armType);
     }
     weaponsAwaitApproval(req) {
         const id = req.user.id;
@@ -173,6 +184,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getWeapons", null);
 __decorate([
+    (0, common_1.Get)("/all/weapons"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "allWeapons", null);
+__decorate([
     (0, common_1.Post)("/signout/weapon"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
@@ -189,6 +207,23 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Get)("/get/:weaponId"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Param)("weaponId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getWeaponById", null);
+__decorate([
+    (0, common_1.Get)("/get/weapon-armType/:armType"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)("armType")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getWeaponByArmType", null);
 __decorate([
     (0, common_1.Get)("/weapons/await-approval"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

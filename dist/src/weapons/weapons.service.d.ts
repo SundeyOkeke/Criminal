@@ -52,17 +52,23 @@ export declare class WeaponsService {
     releasedWeapons(unit: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>, never>[]>;
-    approveWeapon(unit: any, data: any): Promise<{
+    approveWeapon(commUser: any, data: any): Promise<{
         message: string;
     }>;
-    releaseWeapon(unit: any, data: any): Promise<{
+    releaseWeapon(amourer: any, data: any): Promise<{
         message: string;
     }>;
-    retrieveWeapon(unit: any, data: any): Promise<{
+    retrieveWeapon(amourer: any, data: any): Promise<{
         message: string;
     }>;
     weaponHistory(userId: any): Promise<UserData[]>;
     getUnitWeapons(unitId: any): Promise<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
         _id: import("mongoose").Types.ObjectId;
     }, never>, never>[]>;
+    allWeapons(): Promise<Omit<Omit<Omit<Omit<Omit<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>, never>, never>, never>, never>, never>[]>;
+    getWeaponByArmType(user: any, armType: any): Promise<import("mongoose").Document<unknown, {}, Weapon> & Omit<Weapon & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
 }

@@ -13,6 +13,7 @@ import {
 } from "./schema/weapons.schema";
 import { convertDateTimeFormat } from "src/utils/utils";
 import { UserData } from "./dto/weapons.dto";
+import { Equal } from "typeorm";
 
 @Injectable()
 export class WeaponsService {
@@ -182,6 +183,9 @@ export class WeaponsService {
       proposedSigninDate: convertDateTimeFormat(returnDate),
       approve: Approval.AwaitingApproval,
       actualSigninDate: "",
+      approvedBy: null,
+      releasedBy: null,
+      retrievedBy: null,
     };
 
     const signoutWeapon = await this.weaponModel.findByIdAndUpdate(
@@ -193,7 +197,13 @@ export class WeaponsService {
   }
 
   async getWeaponById(id) {
-    return await this.weaponModel.findById(id).populate("unit");
+    return await this.weaponModel
+      .findById(id)
+      .populate("unit")
+      .populate("users.user")
+      .populate("users.approvedBy")
+      .populate("users.releasedBy")
+      .populate("users.retrievedBy");
   }
 
   async weaponsAwaitApproval(unit) {
@@ -232,13 +242,15 @@ export class WeaponsService {
       .populate("users.user");
   }
 
-  async approveWeapon(unit, data) {
+  async approveWeapon(commUser, data) {
     const { weaponId } = data;
+    const { _id: userId } = commUser;
     const weapon = await this.weaponModel.findById(weaponId);
-    if (weapon.unit._id.toString() === unit.toString()) {
+    if (weapon.unit._id.toString() === commUser.unit._id.toString()) {
       weapon.users.forEach((user) => {
         if (user.approve === Approval.AwaitingApproval) {
           user.approve = Approval.AwaitingRelease;
+          user.approvedBy = userId;
         }
       });
 
@@ -247,29 +259,37 @@ export class WeaponsService {
     }
   }
 
-  async releaseWeapon(unit, data) {
+  async releaseWeapon(amourer, data) {
     const { weaponId } = data;
+    const { _id: userId } = amourer;
     const weapon = await this.weaponModel.findById(weaponId);
-    if (weapon.unit._id.toString() === unit.toString()) {
+
+    if (weapon.unit._id.toString() === amourer.unit._id.toString()) {
+      console.log("hey");
       weapon.users.forEach((user) => {
         if (user.approve === Approval.AwaitingRelease) {
           user.approve = Approval.Released;
+          user.releasedBy = userId;
         }
       });
 
       await weapon.save();
       return { message: "Successful" };
     }
+    console.log("hey");
   }
 
-  async retrieveWeapon(unit, data) {
-    const { weaponId, condition } = data;
+  async retrieveWeapon(amourer, data) {
+    const { weaponId, condition, note } = data;
+    const { _id: userId } = amourer;
     const weapon = await this.weaponModel.findById(weaponId);
-    if (weapon.unit._id.toString() === unit.toString()) {
+    if (weapon.unit._id.toString() === amourer.unit._id.toString()) {
       if (condition === Availability.Missing) {
         weapon.users.forEach((user) => {
           if (user.approve === Approval.Released) {
             user.actualSigninDate = new Date();
+            user.retrievedBy = userId;
+            user.note = note;
           }
         });
         (weapon.availability = Availability.Missing), await weapon.save();
@@ -280,6 +300,8 @@ export class WeaponsService {
         if (user.approve === Approval.Released) {
           user.approve = Approval.SigninApproved;
           user.actualSigninDate = new Date();
+          user.retrievedBy = userId;
+          user.note = note;
         }
       });
       (weapon.availability = Availability.Available),
@@ -327,5 +349,35 @@ export class WeaponsService {
   }
   async getUnitWeapons(unitId) {
     return await this.weaponModel.find({ unit: unitId }).populate("unit");
+  }
+
+  async allWeapons() {
+    return await this.weaponModel
+      .find()
+      .populate("unit")
+      .populate("users.user")
+      .populate("users.approvedBy")
+      .populate("users.releasedBy")
+      .populate("users.retrievedBy");
+  }
+
+  async getWeaponByArmType(user, armType) {
+    const weapons = await this.weaponModel.find({
+      armType: armType,
+      unit: user,
+      availability: "available",
+      condition: Condition.Good,
+    });
+
+    console.log(weapons);
+
+    if (weapons.length > 1) {
+      const randomIndex = Math.floor(Math.random() * weapons.length);
+      return weapons[randomIndex];
+    } else if (weapons.length === 1) {
+      return weapons[0];
+    } else {
+      return null;
+    }
   }
 }

@@ -47,12 +47,21 @@ let WeaponsService = class WeaponsService {
             proposedSigninDate: (0, utils_1.convertDateTimeFormat)(returnDate),
             approve: weapons_schema_1.Approval.AwaitingApproval,
             actualSigninDate: "",
+            approvedBy: null,
+            releasedBy: null,
+            retrievedBy: null,
         };
         const signoutWeapon = await this.weaponModel.findByIdAndUpdate(weaponId, { $push: { users: updateData }, availability: weapons_schema_1.Availability.SignedOut }, { new: true });
         return signoutWeapon;
     }
     async getWeaponById(id) {
-        return await this.weaponModel.findById(id).populate("unit");
+        return await this.weaponModel
+            .findById(id)
+            .populate("unit")
+            .populate("users.user")
+            .populate("users.approvedBy")
+            .populate("users.releasedBy")
+            .populate("users.retrievedBy");
     }
     async weaponsAwaitApproval(unit) {
         return await this.weaponModel
@@ -87,40 +96,49 @@ let WeaponsService = class WeaponsService {
         })
             .populate("users.user");
     }
-    async approveWeapon(unit, data) {
+    async approveWeapon(commUser, data) {
         const { weaponId } = data;
+        const { _id: userId } = commUser;
         const weapon = await this.weaponModel.findById(weaponId);
-        if (weapon.unit._id.toString() === unit.toString()) {
+        if (weapon.unit._id.toString() === commUser.unit._id.toString()) {
             weapon.users.forEach((user) => {
                 if (user.approve === weapons_schema_1.Approval.AwaitingApproval) {
                     user.approve = weapons_schema_1.Approval.AwaitingRelease;
+                    user.approvedBy = userId;
                 }
             });
             await weapon.save();
             return { message: "Successful" };
         }
     }
-    async releaseWeapon(unit, data) {
+    async releaseWeapon(amourer, data) {
         const { weaponId } = data;
+        const { _id: userId } = amourer;
         const weapon = await this.weaponModel.findById(weaponId);
-        if (weapon.unit._id.toString() === unit.toString()) {
+        if (weapon.unit._id.toString() === amourer.unit._id.toString()) {
+            console.log("hey");
             weapon.users.forEach((user) => {
                 if (user.approve === weapons_schema_1.Approval.AwaitingRelease) {
                     user.approve = weapons_schema_1.Approval.Released;
+                    user.releasedBy = userId;
                 }
             });
             await weapon.save();
             return { message: "Successful" };
         }
+        console.log("hey");
     }
-    async retrieveWeapon(unit, data) {
-        const { weaponId, condition } = data;
+    async retrieveWeapon(amourer, data) {
+        const { weaponId, condition, note } = data;
+        const { _id: userId } = amourer;
         const weapon = await this.weaponModel.findById(weaponId);
-        if (weapon.unit._id.toString() === unit.toString()) {
+        if (weapon.unit._id.toString() === amourer.unit._id.toString()) {
             if (condition === weapons_schema_1.Availability.Missing) {
                 weapon.users.forEach((user) => {
                     if (user.approve === weapons_schema_1.Approval.Released) {
                         user.actualSigninDate = new Date();
+                        user.retrievedBy = userId;
+                        user.note = note;
                     }
                 });
                 (weapon.availability = weapons_schema_1.Availability.Missing), await weapon.save();
@@ -130,6 +148,8 @@ let WeaponsService = class WeaponsService {
                 if (user.approve === weapons_schema_1.Approval.Released) {
                     user.approve = weapons_schema_1.Approval.SigninApproved;
                     user.actualSigninDate = new Date();
+                    user.retrievedBy = userId;
+                    user.note = note;
                 }
             });
             (weapon.availability = weapons_schema_1.Availability.Available),
@@ -168,6 +188,34 @@ let WeaponsService = class WeaponsService {
     }
     async getUnitWeapons(unitId) {
         return await this.weaponModel.find({ unit: unitId }).populate("unit");
+    }
+    async allWeapons() {
+        return await this.weaponModel
+            .find()
+            .populate("unit")
+            .populate("users.user")
+            .populate("users.approvedBy")
+            .populate("users.releasedBy")
+            .populate("users.retrievedBy");
+    }
+    async getWeaponByArmType(user, armType) {
+        const weapons = await this.weaponModel.find({
+            armType: armType,
+            unit: user,
+            availability: "available",
+            condition: weapons_schema_1.Condition.Good,
+        });
+        console.log(weapons);
+        if (weapons.length > 1) {
+            const randomIndex = Math.floor(Math.random() * weapons.length);
+            return weapons[randomIndex];
+        }
+        else if (weapons.length === 1) {
+            return weapons[0];
+        }
+        else {
+            return null;
+        }
     }
 };
 WeaponsService = __decorate([

@@ -19,6 +19,7 @@ import {
   releaseWeaponDto,
   retrieveWeaponDto,
   signoutWeaponDto,
+  weaponDto,
 } from "src/weapons/dto/weapons.dto";
 import { WeaponsService } from "src/weapons/weapons.service";
 
@@ -81,6 +82,12 @@ export class AuthController {
     return this.authService.getWeapons(id, data);
   }
 
+  @Get("/all/weapons")
+  @UseGuards(JwtAuthGuard)
+  allWeapons() {
+    return this.weaponsService.allWeapons();
+  }
+
   @Post("/signout/weapon")
   @UseGuards(JwtAuthGuard)
   signoutWeapon(@Req() req, @Body() data: signoutWeaponDto) {
@@ -93,6 +100,20 @@ export class AuthController {
   getUserById(@Req() req) {
     const id: string = req.user.id;
     return this.authService.getUserById(id);
+  }
+
+  @Get("/get/:weaponId")
+  @UseGuards(JwtAuthGuard)
+  getWeaponById(@Param("weaponId") weaponId: string) {
+    return this.weaponsService.getWeaponById(weaponId);
+  }
+
+  @Get("/get/weapon-armType/:armType")
+  @UseGuards(JwtAuthGuard)
+  getWeaponByArmType(@Req() req, @Param("armType") armType: string) {
+    const id: string = req.user.id;
+    console.log(armType);
+    return this.authService.getWeaponByArmType(id, armType);
   }
 
   @Get("/weapons/await-approval")

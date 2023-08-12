@@ -40,6 +40,14 @@ export declare enum Condition {
     Good = "Good",
     Bad = "Bad"
 }
+export declare enum ArmType {
+    AK47 = "AK47",
+    Pistol = "Pistol",
+    FNRifles = "FN Rifles",
+    AK47Bullet = "AK47 Bullet",
+    PistolBullet = "Pistol Bullet",
+    FNRiflesBullet = "FNRifles Bullet"
+}
 export declare class Weapon {
     name: string;
     DateOfManufacture: string;
@@ -47,6 +55,7 @@ export declare class Weapon {
     productionDate: string;
     availability: Availability;
     condition: Condition;
+    armType: ArmType;
     unit: Unit;
     users: {
         user: Types.ObjectId | User;
@@ -54,6 +63,10 @@ export declare class Weapon {
         proposedSigninDate: Date;
         actualSigninDate: Date;
         approve: string;
+        approvedBy: Types.ObjectId | User;
+        releasedBy: Types.ObjectId | User;
+        retrievedBy: Types.ObjectId | User;
+        note: string;
     }[];
 }
 export type WeaponDocument = Weapon & Document;

@@ -4,6 +4,7 @@ export declare class WeaponDto {
     readonly productionDate: string;
     readonly serialNumber: string;
     readonly condition: string;
+    readonly armType: string;
 }
 export declare class CategoryWeaponDto {
     readonly categoryName: string;
@@ -21,6 +22,7 @@ export declare class releaseWeaponDto {
 export declare class retrieveWeaponDto {
     readonly weaponId: string;
     readonly condition: string;
+    readonly note: string;
 }
 export interface UserData {
     name: string;
@@ -29,4 +31,7 @@ export interface UserData {
     signoutDate: Date;
     actualSigninDate: Date | null;
     approve: string;
+}
+export declare class weaponDto {
+    readonly weaponId: string;
 }
