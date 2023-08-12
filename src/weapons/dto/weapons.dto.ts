@@ -40,6 +40,9 @@ export class signoutWeaponDto {
   @IsString()
   @IsNotEmpty()
   readonly returnDate: string;
+
+  @IsString()
+  readonly numRounds: number;
 }
 
 export class approveWeaponDto {

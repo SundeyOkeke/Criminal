@@ -87,6 +87,7 @@ __decorate([
                 releasedBy: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" },
                 retrievedBy: { type: mongoose_2.SchemaTypes.ObjectId, ref: "User" },
                 note: String,
+                numRounds: Number,
             },
         ],
         default: [],

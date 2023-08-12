@@ -68,6 +68,7 @@ export class Weapon {
         releasedBy: { type: SchemaTypes.ObjectId, ref: "User" },
         retrievedBy: { type: SchemaTypes.ObjectId, ref: "User" },
         note: String,
+        numRounds: Number,
       },
     ],
     default: [],
@@ -82,6 +83,7 @@ export class Weapon {
     releasedBy: Types.ObjectId | User;
     retrievedBy: Types.ObjectId | User;
     note: string;
+    numRounds: number,
   }[];
 }
 

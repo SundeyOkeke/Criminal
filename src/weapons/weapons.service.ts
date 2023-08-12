@@ -174,7 +174,7 @@ export class WeaponsService {
   // }
 
   async signoutWeapon(user, data) {
-    const { weaponId, returnDate } = data;
+    const { weaponId, returnDate, numRounds } = data;
     const { _id: userId } = user;
 
     const updateData = {
@@ -186,6 +186,7 @@ export class WeaponsService {
       approvedBy: null,
       releasedBy: null,
       retrievedBy: null,
+      numRounds : numRounds
     };
 
     const signoutWeapon = await this.weaponModel.findByIdAndUpdate(

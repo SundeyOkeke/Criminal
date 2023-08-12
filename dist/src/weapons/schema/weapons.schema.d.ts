@@ -67,6 +67,7 @@ export declare class Weapon {
         releasedBy: Types.ObjectId | User;
         retrievedBy: Types.ObjectId | User;
         note: string;
+        numRounds: number;
     }[];
 }
 export type WeaponDocument = Weapon & Document;

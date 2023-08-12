@@ -39,7 +39,7 @@ let WeaponsService = class WeaponsService {
         return await this.weaponModel.find({ unit: unitId });
     }
     async signoutWeapon(user, data) {
-        const { weaponId, returnDate } = data;
+        const { weaponId, returnDate, numRounds } = data;
         const { _id: userId } = user;
         const updateData = {
             user: userId,
@@ -50,6 +50,7 @@ let WeaponsService = class WeaponsService {
             approvedBy: null,
             releasedBy: null,
             retrievedBy: null,
+            numRounds: numRounds
         };
         const signoutWeapon = await this.weaponModel.findByIdAndUpdate(weaponId, { $push: { users: updateData }, availability: weapons_schema_1.Availability.SignedOut }, { new: true });
         return signoutWeapon;
