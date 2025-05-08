@@ -17,10 +17,11 @@ const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./jwt.strategy");
 const user_schema_1 = require("./schema/user.schema");
 const category_module_1 = require("../categories/category.module");
-const weapons_module_1 = require("../weapons/weapons.module");
+const criminal_module_1 = require("../criminal/criminal.module");
 let AuthModule = class AuthModule {
 };
-AuthModule = __decorate([
+exports.AuthModule = AuthModule;
+exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             passport_1.PassportModule.register({ defaultStrategy: "jwt" }),
@@ -37,11 +38,10 @@ AuthModule = __decorate([
             }),
             mongoose_1.MongooseModule.forFeature([{ name: "User", schema: user_schema_1.UserSchema }]),
             category_module_1.CategoryModule,
-            weapons_module_1.WeaponModule,
+            criminal_module_1.CriminalModule,
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
     })
 ], AuthModule);
-exports.AuthModule = AuthModule;
 //# sourceMappingURL=auth.module.js.map

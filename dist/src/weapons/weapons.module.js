@@ -13,7 +13,8 @@ const weapons_schema_1 = require("./schema/weapons.schema");
 const weapons_service_1 = require("./weapons.service");
 let WeaponModule = class WeaponModule {
 };
-WeaponModule = __decorate([
+exports.WeaponModule = WeaponModule;
+exports.WeaponModule = WeaponModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: "Weapon", schema: weapons_schema_1.WeaponSchema }]),
@@ -22,5 +23,4 @@ WeaponModule = __decorate([
         providers: [weapons_service_1.WeaponsService],
     })
 ], WeaponModule);
-exports.WeaponModule = WeaponModule;
 //# sourceMappingURL=weapons.module.js.map

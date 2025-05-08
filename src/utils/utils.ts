@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcryptjs';
 import { ValueTransformer } from "typeorm";
 
 // TODO[Security] Suggestion: choose more complex password hashing algorithm.

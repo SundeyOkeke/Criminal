@@ -1,9 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, SchemaTypes } from "mongoose";
 import { Unit } from "src/categories/schema/unit.schema";
-// import { PasswordTransformer } from "src/utils/utils";
-import { ValueTransformer } from "typeorm";
-import * as bcrypt from "bcrypt";
 
 export enum UserRole {
   UnitMember = "Unit Member",
@@ -33,6 +30,7 @@ export class User {
 
   @Prop({ enum: UserRole, default: UserRole.UnitMember })
   role: UserRole;
+  _id: any | User;
 }
 
 export type UserDocument = User & Document;

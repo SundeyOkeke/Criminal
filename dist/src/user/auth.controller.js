@@ -14,15 +14,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const auth_service_1 = require("./auth.service");
 const user_dto_1 = require("./dto/user.dto");
 const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
-const weapons_dto_1 = require("../weapons/dto/weapons.dto");
-const weapons_service_1 = require("../weapons/weapons.service");
+const criminal_service_1 = require("../criminal/criminal.service");
+const platform_express_1 = require("@nestjs/platform-express");
+const crimina_dto_1 = require("../criminal/dto/crimina.dto");
 let AuthController = class AuthController {
-    constructor(authService, weaponsService) {
+    constructor(authService, criminalService) {
         this.authService = authService;
-        this.weaponsService = weaponsService;
+        this.criminalService = criminalService;
     }
     register(data) {
         return this.authService.register(data);
@@ -42,64 +44,9 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.appointBattalionComm(id, data);
     }
-    appointAmourer(req, data) {
-        const id = req.user.id;
-        return this.authService.appointAmourer(id, data);
-    }
-    registerWeapon(req, data) {
-        const id = req.user.id;
-        return this.authService.registerWeapon(id, data);
-    }
-    getWeapons(req, data) {
-        const id = req.user.id;
-        return this.authService.getWeapons(id, data);
-    }
-    allWeapons() {
-        return this.weaponsService.allWeapons();
-    }
-    signoutWeapon(req, data) {
-        const id = req.user.id;
-        return this.authService.signoutWeapon(id, data);
-    }
     getUserById(req) {
         const id = req.user.id;
         return this.authService.getUserById(id);
-    }
-    getWeaponById(weaponId) {
-        return this.weaponsService.getWeaponById(weaponId);
-    }
-    getWeaponByArmType(req, armType) {
-        const id = req.user.id;
-        console.log(armType);
-        return this.authService.getWeaponByArmType(id, armType);
-    }
-    weaponsAwaitApproval(req) {
-        const id = req.user.id;
-        return this.authService.weaponsAwaitApproval(id);
-    }
-    weaponsAwaitRelease(req) {
-        const id = req.user.id;
-        return this.authService.weaponsAwaitRelease(id);
-    }
-    releasedWeapons(req) {
-        const id = req.user.id;
-        return this.authService.releasedWeapons(id);
-    }
-    approveWeapon(req, data) {
-        const id = req.user.id;
-        return this.authService.approveWeapon(id, data);
-    }
-    releaseWeapon(req, data) {
-        const id = req.user.id;
-        return this.authService.releaseWeapon(id, data);
-    }
-    retrieveWeapon(req, data) {
-        const id = req.user.id;
-        return this.authService.retrieveWeapon(id, data);
-    }
-    weaponHistory(req) {
-        const id = req.user.id;
-        return this.authService.weaponHistory(id);
     }
     getAllUsers() {
         return this.authService.getAllUsers();
@@ -108,15 +55,32 @@ let AuthController = class AuthController {
         const id = req.user.id;
         return this.authService.getAllUnitUsers(id);
     }
-    getUserByProvidedId(userId) {
-        return this.authService.getUserById(userId);
+    criminalRecords() {
+        return this.authService.criminalRecords();
     }
-    getUnitWeapons(unitId) {
-        return this.weaponsService.getUnitWeapons(unitId);
+    createCriminal(data, req) {
+        const id = req.user.id;
+        return this.authService.createCriminal(data, id);
+    }
+    async uploadFiles(files) {
+        try {
+            const upload = await this.authService.uploadFiles(files);
+            return upload;
+        }
+        catch (error) {
+            if ((error === null || error === void 0 ? void 0 : error.status) >= 400 && (error === null || error === void 0 ? void 0 : error.status) < 500) {
+                throw new common_1.NotAcceptableException(error === null || error === void 0 ? void 0 : error.message);
+            }
+            throw error;
+        }
     }
 };
+exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)("/register"),
+    (0, swagger_1.ApiOperation)({ summary: "Register a new user" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "User registered successfully." }),
+    (0, swagger_1.ApiBody)({ type: user_dto_1.RegisterDto }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.RegisterDto]),
@@ -124,14 +88,21 @@ __decorate([
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)("/login"),
+    (0, swagger_1.ApiOperation)({ summary: "User login" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User logged in successfully." }),
+    (0, swagger_1.ApiBody)({ type: user_dto_1.LoginDto }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Put)("/appoint/division/comm"),
+    (0, common_1.Put)("/appoint/division-comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Appoint a division commander" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Division commander appointed." }),
+    (0, swagger_1.ApiBody)({ type: user_dto_1.AppointDto }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -139,8 +110,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointDivisionComm", null);
 __decorate([
-    (0, common_1.Put)("/appoint/brigade/comm"),
+    (0, common_1.Put)("/appoint/brigade-comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Appoint a brigade commander" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Brigade commander appointed." }),
+    (0, swagger_1.ApiBody)({ type: user_dto_1.AppointDto }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -148,8 +123,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBrigadeComm", null);
 __decorate([
-    (0, common_1.Put)("/appoint/battalion/comm"),
+    (0, common_1.Put)("/appoint/battalion-comm"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Appoint a battalion commander" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Battalion commander appointed." }),
+    (0, swagger_1.ApiBody)({ type: user_dto_1.AppointDto }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -157,135 +136,22 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "appointBattalionComm", null);
 __decorate([
-    (0, common_1.Put)("/appoint/amourer"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, user_dto_1.AppointDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "appointAmourer", null);
-__decorate([
-    (0, common_1.Post)("/register/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.WeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "registerWeapon", null);
-__decorate([
-    (0, common_1.Get)("/get/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.CategoryWeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getWeapons", null);
-__decorate([
-    (0, common_1.Get)("/all/weapons"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "allWeapons", null);
-__decorate([
-    (0, common_1.Post)("/signout/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.signoutWeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "signoutWeapon", null);
-__decorate([
     (0, common_1.Get)("/get/user"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get user by ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User data retrieved." }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUserById", null);
 __decorate([
-    (0, common_1.Get)("/get/:weaponId"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)("weaponId")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getWeaponById", null);
-__decorate([
-    (0, common_1.Get)("/get/weapon-armType/:armType"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)("armType")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getWeaponByArmType", null);
-__decorate([
-    (0, common_1.Get)("/weapons/await-approval"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "weaponsAwaitApproval", null);
-__decorate([
-    (0, common_1.Get)("/weapons/await-release"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "weaponsAwaitRelease", null);
-__decorate([
-    (0, common_1.Get)("/released/weapons"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "releasedWeapons", null);
-__decorate([
-    (0, common_1.Patch)("/approve/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.approveWeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "approveWeapon", null);
-__decorate([
-    (0, common_1.Patch)("/release/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.releaseWeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "releaseWeapon", null);
-__decorate([
-    (0, common_1.Patch)("/retrieve/weapon"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, weapons_dto_1.retrieveWeaponDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "retrieveWeapon", null);
-__decorate([
-    (0, common_1.Get)("/weapon/history"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "weaponHistory", null);
-__decorate([
     (0, common_1.Get)("/all/users"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all users" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of all users." }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -293,31 +159,67 @@ __decorate([
 __decorate([
     (0, common_1.Get)("/all/unit-users"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all unit users" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of unit users." }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getAllUnitUsers", null);
 __decorate([
-    (0, common_1.Get)("/get/user-id/:userId"),
+    (0, common_1.Get)("criminal-records"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)("userId")),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all Criminal Records" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of unit users." }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "getUserByProvidedId", null);
+], AuthController.prototype, "criminalRecords", null);
 __decorate([
-    (0, common_1.Get)("/get/unit/weapons/:unitId"),
+    (0, common_1.Post)("criminal-record"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)("unitId")),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all unit users" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of unit users." }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [crimina_dto_1.CreateCriminalDto, Object]),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "getUnitWeapons", null);
-AuthController = __decorate([
+], AuthController.prototype, "createCriminal", null);
+__decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([{ name: 'media', maxCount: 5 }])),
+    (0, common_1.Post)('upload-files'),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                media: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'The image has been successfully uploaded.',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 406, description: 'Not Acceptable: Error message.' }),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.UploadedFiles)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "uploadFiles", null);
+exports.AuthController = AuthController = __decorate([
+    (0, swagger_1.ApiTags)("User Authentication"),
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
-        weapons_service_1.WeaponsService])
+        criminal_service_1.CriminalService])
 ], AuthController);
-exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

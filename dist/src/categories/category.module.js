@@ -15,7 +15,8 @@ const category_schema_1 = require("./schema/category.schema");
 const unit_schema_1 = require("./schema/unit.schema");
 let CategoryModule = class CategoryModule {
 };
-CategoryModule = __decorate([
+exports.CategoryModule = CategoryModule;
+exports.CategoryModule = CategoryModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
@@ -28,5 +29,4 @@ CategoryModule = __decorate([
         providers: [category_service_1.CategoryService],
     })
 ], CategoryModule);
-exports.CategoryModule = CategoryModule;
 //# sourceMappingURL=category.module.js.map

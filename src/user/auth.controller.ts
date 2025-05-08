@@ -1,192 +1,150 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Param,
-  Put,
-  UseGuards,
-  Req,
-  Get,
-  Patch,
-} from "@nestjs/common";
+import { Body, Controller, Post, Param, Put, UseGuards, Req, Get, Patch, NotAcceptableException, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { AppointDto, LoginDto, RegisterDto, userIdDto } from "./dto/user.dto";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
-import {
-  CategoryWeaponDto,
-  WeaponDto,
-  approveWeaponDto,
-  releaseWeaponDto,
-  retrieveWeaponDto,
-  signoutWeaponDto,
-  weaponDto,
-} from "src/weapons/dto/weapons.dto";
-import { WeaponsService } from "src/weapons/weapons.service";
+import { CriminalService } from "src/criminal/criminal.service";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { CreateCriminalDto } from "src/criminal/dto/crimina.dto";
 
+@ApiTags("User Authentication")
 @Controller("user")
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private weaponsService: WeaponsService
+    private criminalService: CriminalService
   ) {}
 
   @Post("/register")
+  @ApiOperation({ summary: "Register a new user" })
+  @ApiResponse({ status: 201, description: "User registered successfully." })
+  @ApiBody({ type: RegisterDto })
   register(@Body() data: RegisterDto) {
     return this.authService.register(data);
   }
 
   @Post("/login")
+  @ApiOperation({ summary: "User login" })
+  @ApiResponse({ status: 200, description: "User logged in successfully." })
+  @ApiBody({ type: LoginDto })
   login(@Body() data: LoginDto) {
     return this.authService.login(data);
   }
 
-  @Put("/appoint/division/comm")
+  @Put("/appoint/division-comm")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Appoint a division commander" })
+  @ApiResponse({ status: 200, description: "Division commander appointed." })
+  @ApiBody({ type: AppointDto })
   appointDivisionComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointDivisionComm(id, data);
   }
 
-  @Put("/appoint/brigade/comm")
+  @Put("/appoint/brigade-comm")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Appoint a brigade commander" })
+  @ApiResponse({ status: 200, description: "Brigade commander appointed." })
+  @ApiBody({ type: AppointDto })
   appointBrigadeComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointBrigadeComm(id, data);
   }
 
-  @Put("/appoint/battalion/comm")
+  @Put("/appoint/battalion-comm")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Appoint a battalion commander" })
+  @ApiResponse({ status: 200, description: "Battalion commander appointed." })
+  @ApiBody({ type: AppointDto })
   appointBattalionComm(@Req() req, @Body() data: AppointDto) {
     const id: string = req.user.id;
     return this.authService.appointBattalionComm(id, data);
   }
 
-  @Put("/appoint/amourer")
-  @UseGuards(JwtAuthGuard)
-  appointAmourer(@Req() req, @Body() data: AppointDto) {
-    const id: string = req.user.id;
-    return this.authService.appointAmourer(id, data);
-  }
-
-  @Post("/register/weapon")
-  @UseGuards(JwtAuthGuard)
-  registerWeapon(@Req() req, @Body() data: WeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.registerWeapon(id, data);
-  }
-
-  @Get("/get/weapon")
-  @UseGuards(JwtAuthGuard)
-  getWeapons(@Req() req, @Body() data: CategoryWeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.getWeapons(id, data);
-  }
-
-  @Get("/all/weapons")
-  @UseGuards(JwtAuthGuard)
-  allWeapons() {
-    return this.weaponsService.allWeapons();
-  }
-
-  @Post("/signout/weapon")
-  @UseGuards(JwtAuthGuard)
-  signoutWeapon(@Req() req, @Body() data: signoutWeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.signoutWeapon(id, data);
-  }
-
   @Get("/get/user")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get user by ID" })
+  @ApiResponse({ status: 200, description: "User data retrieved." })
   getUserById(@Req() req) {
     const id: string = req.user.id;
     return this.authService.getUserById(id);
   }
 
-  @Get("/get/:weaponId")
-  @UseGuards(JwtAuthGuard)
-  getWeaponById(@Param("weaponId") weaponId: string) {
-    return this.weaponsService.getWeaponById(weaponId);
-  }
-
-  @Get("/get/weapon-armType/:armType")
-  @UseGuards(JwtAuthGuard)
-  getWeaponByArmType(@Req() req, @Param("armType") armType: string) {
-    const id: string = req.user.id;
-    console.log(armType);
-    return this.authService.getWeaponByArmType(id, armType);
-  }
-
-  @Get("/weapons/await-approval")
-  @UseGuards(JwtAuthGuard)
-  weaponsAwaitApproval(@Req() req) {
-    const id: string = req.user.id;
-    return this.authService.weaponsAwaitApproval(id);
-  }
-
-  @Get("/weapons/await-release")
-  @UseGuards(JwtAuthGuard)
-  weaponsAwaitRelease(@Req() req) {
-    const id: string = req.user.id;
-    return this.authService.weaponsAwaitRelease(id);
-  }
-
-  @Get("/released/weapons")
-  @UseGuards(JwtAuthGuard)
-  releasedWeapons(@Req() req) {
-    const id: string = req.user.id;
-    return this.authService.releasedWeapons(id);
-  }
-
-  @Patch("/approve/weapon")
-  @UseGuards(JwtAuthGuard)
-  approveWeapon(@Req() req, @Body() data: approveWeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.approveWeapon(id, data);
-  }
-
-  @Patch("/release/weapon")
-  @UseGuards(JwtAuthGuard)
-  releaseWeapon(@Req() req, @Body() data: releaseWeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.releaseWeapon(id, data);
-  }
-
-  @Patch("/retrieve/weapon")
-  @UseGuards(JwtAuthGuard)
-  retrieveWeapon(@Req() req, @Body() data: retrieveWeaponDto) {
-    const id: string = req.user.id;
-    return this.authService.retrieveWeapon(id, data);
-  }
-
-  @Get("/weapon/history")
-  @UseGuards(JwtAuthGuard)
-  weaponHistory(@Req() req) {
-    const id: string = req.user.id;
-    return this.authService.weaponHistory(id);
-  }
-
   @Get("/all/users")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get all users" })
+  @ApiResponse({ status: 200, description: "List of all users." })
   getAllUsers() {
     return this.authService.getAllUsers();
   }
 
   @Get("/all/unit-users")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get all unit users" })
+  @ApiResponse({ status: 200, description: "List of unit users." })
   getAllUnitUsers(@Req() req) {
     const id: string = req.user.id;
     return this.authService.getAllUnitUsers(id);
   }
 
-  @Get("/get/user-id/:userId")
+  @Get("criminal-records")
   @UseGuards(JwtAuthGuard)
-  getUserByProvidedId(@Param("userId") userId: string) {
-    return this.authService.getUserById(userId);
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get all Criminal Records" })
+  @ApiResponse({ status: 200, description: "List of unit users." })
+  criminalRecords() {
+    return this.authService.criminalRecords();
   }
 
-  @Get("/get/unit/weapons/:unitId")
+  @Post("criminal-record")
   @UseGuards(JwtAuthGuard)
-  getUnitWeapons(@Param("unitId") unitId: string) {
-    return this.weaponsService.getUnitWeapons(unitId);
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get all unit users" })
+  @ApiResponse({ status: 200, description: "List of unit users." })
+  createCriminal(@Body() data: CreateCriminalDto,@Req() req) {
+    const id: string = req.user.id;
+
+    return this.authService.createCriminal(data, id);
   }
+
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'media', maxCount: 5 }]))
+  @Post('upload-files')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        media: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The image has been successfully uploaded.',
+  })
+  @ApiResponse({ status: 406, description: 'Not Acceptable: Error message.' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async uploadFiles(@UploadedFiles() files) {
+    try {
+      const upload = await this.authService.uploadFiles(files);
+      return upload;
+    } catch (error) {
+      if (error?.status >= 400 && error?.status < 500) {
+        throw new NotAcceptableException(error?.message);
+      }
+
+      throw error;
+    }
+  }
+
 }

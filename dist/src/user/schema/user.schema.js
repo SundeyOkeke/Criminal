@@ -21,9 +21,10 @@ var UserRole;
     UserRole["DivisionCommander"] = "Division Commander";
     UserRole["SuperAdmin"] = "Super Admin";
     UserRole["Amourer"] = "Amourer";
-})(UserRole = exports.UserRole || (exports.UserRole = {}));
+})(UserRole || (exports.UserRole = UserRole = {}));
 let User = class User {
 };
+exports.User = User;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
@@ -48,9 +49,8 @@ __decorate([
     (0, mongoose_1.Prop)({ enum: UserRole, default: UserRole.UnitMember }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
-User = __decorate([
+exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);
-exports.User = User;
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
 //# sourceMappingURL=user.schema.js.map

@@ -33,6 +33,7 @@ let CategoryController = class CategoryController {
         return this.categoryService.getCategories();
     }
 };
+exports.CategoryController = CategoryController;
 __decorate([
     (0, common_1.Post)("/create/category"),
     __param(0, (0, common_1.Body)()),
@@ -59,9 +60,8 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "getCategories", null);
-CategoryController = __decorate([
+exports.CategoryController = CategoryController = __decorate([
     (0, common_1.Controller)("category"),
     __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], CategoryController);
-exports.CategoryController = CategoryController;
 //# sourceMappingURL=category.controller.js.map

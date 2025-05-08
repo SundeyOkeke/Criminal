@@ -5,7 +5,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./user/auth.module";
 import { CategoryModule } from "./categories/category.module";
-import { WeaponModule } from "./weapons/weapons.module";
+import { CriminalModule } from "./criminal/criminal.module";
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { WeaponModule } from "./weapons/weapons.module";
     MongooseModule.forRoot(process.env.DB_URI),
     AuthModule,
     CategoryModule,
-    WeaponModule,
+    CriminalModule,
   ],
   controllers: [AppController],
   providers: [AppService],

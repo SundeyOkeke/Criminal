@@ -219,10 +219,10 @@ let WeaponsService = class WeaponsService {
         }
     }
 };
-WeaponsService = __decorate([
+exports.WeaponsService = WeaponsService;
+exports.WeaponsService = WeaponsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)("Weapon")),
     __metadata("design:paramtypes", [mongoose_2.Model])
 ], WeaponsService);
-exports.WeaponsService = WeaponsService;
 //# sourceMappingURL=weapons.service.js.map

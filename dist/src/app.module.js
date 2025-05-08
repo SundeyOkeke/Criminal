@@ -14,10 +14,11 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./user/auth.module");
 const category_module_1 = require("./categories/category.module");
-const weapons_module_1 = require("./weapons/weapons.module");
+const criminal_module_1 = require("./criminal/criminal.module");
 let AppModule = class AppModule {
 };
-AppModule = __decorate([
+exports.AppModule = AppModule;
+exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({
@@ -27,11 +28,10 @@ AppModule = __decorate([
             mongoose_1.MongooseModule.forRoot(process.env.DB_URI),
             auth_module_1.AuthModule,
             category_module_1.CategoryModule,
-            weapons_module_1.WeaponModule,
+            criminal_module_1.CriminalModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
 ], AppModule);
-exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

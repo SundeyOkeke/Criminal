@@ -1,27 +1,3 @@
-/// <reference types="mongoose/types/aggregate" />
-/// <reference types="mongoose/types/callback" />
-/// <reference types="mongoose/types/collection" />
-/// <reference types="mongoose/types/connection" />
-/// <reference types="mongoose/types/cursor" />
-/// <reference types="mongoose/types/document" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/expressions" />
-/// <reference types="mongoose/types/helpers" />
-/// <reference types="mongoose/types/middlewares" />
-/// <reference types="mongoose/types/indexes" />
-/// <reference types="mongoose/types/models" />
-/// <reference types="mongoose/types/mongooseoptions" />
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/populate" />
-/// <reference types="mongoose/types/query" />
-/// <reference types="mongoose/types/schemaoptions" />
-/// <reference types="mongoose/types/schematypes" />
-/// <reference types="mongoose/types/session" />
-/// <reference types="mongoose/types/types" />
-/// <reference types="mongoose/types/utility" />
-/// <reference types="mongoose/types/validation" />
-/// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose/types/inferschematype" />
 import { Model } from "mongoose";
 import { Category } from "./schema/category.schema";
 import { Unit, UnitDocument } from "./schema/unit.schema";
@@ -30,17 +6,25 @@ export declare class CategoryService {
     private categoryModel;
     private UnitModel;
     constructor(categoryModel: Model<Category>, UnitModel: Model<Unit>);
-    createCategory(data: any): Promise<import("mongoose").Document<unknown, {}, Category> & Omit<Category & {
+    createCategory(data: any): Promise<import("mongoose").Document<unknown, {}, Category, {}> & Category & {
         _id: import("mongoose").Types.ObjectId;
-    }, never>>;
+    } & {
+        __v: number;
+    }>;
     createUnit(data: CategoryDto): Promise<UnitDocument>;
-    getCategories(): Promise<Omit<import("mongoose").Document<unknown, {}, Category> & Omit<Category & {
+    getCategories(): Promise<(import("mongoose").Document<unknown, {}, Category, {}> & Category & {
         _id: import("mongoose").Types.ObjectId;
-    }, never>, never>[]>;
-    getUnits(): Promise<Omit<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & Required<{
+    } & {
+        __v: number;
+    })[]>;
+    getUnits(): Promise<(import("mongoose").Document<unknown, {}, Unit, {}> & Unit & Required<{
         _id: import("mongoose").Types.ObjectId;
-    }>, never>, never>[]>;
-    findOneUnit(unit: any): Promise<import("mongoose").Document<unknown, {}, Unit> & Omit<Unit & Required<{
+    }> & {
+        __v: number;
+    })[]>;
+    findOneUnit(unit: any): Promise<import("mongoose").Document<unknown, {}, Unit, {}> & Unit & Required<{
         _id: import("mongoose").Types.ObjectId;
-    }>, never>>;
+    }> & {
+        __v: number;
+    }>;
 }

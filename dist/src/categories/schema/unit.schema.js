@@ -15,6 +15,7 @@ const mongoose_2 = require("mongoose");
 const category_schema_1 = require("./category.schema");
 let Unit = class Unit {
 };
+exports.Unit = Unit;
 __decorate([
     (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
@@ -27,9 +28,8 @@ __decorate([
     (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: "User" }] }),
     __metadata("design:type", Array)
 ], Unit.prototype, "users", void 0);
-Unit = __decorate([
+exports.Unit = Unit = __decorate([
     (0, mongoose_1.Schema)()
 ], Unit);
-exports.Unit = Unit;
 exports.UnitSchema = mongoose_1.SchemaFactory.createForClass(Unit);
 //# sourceMappingURL=unit.schema.js.map

@@ -3,16 +3,14 @@ import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { PassportModule } from "@nestjs/passport";
-import mongoose from "mongoose";
 import { config } from "process";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./jwt.strategy";
 import { UserSchema } from "./schema/user.schema";
 import { CategoryModule } from "src/categories/category.module";
-import { UnitSchema } from "src/categories/schema/unit.schema";
-import { Weapon, WeaponSchema } from "src/weapons/schema/weapons.schema";
-import { WeaponModule } from "src/weapons/weapons.module";
+
+import { CriminalModule } from "src/criminal/criminal.module";
 
 @Module({
   imports: [
@@ -30,7 +28,7 @@ import { WeaponModule } from "src/weapons/weapons.module";
     }),
     MongooseModule.forFeature([{ name: "User", schema: UserSchema }]),
     CategoryModule,
-    WeaponModule,
+    CriminalModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

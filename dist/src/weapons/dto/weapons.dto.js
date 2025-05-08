@@ -13,6 +13,7 @@ exports.weaponDto = exports.retrieveWeaponDto = exports.releaseWeaponDto = expor
 const class_validator_1 = require("class-validator");
 class WeaponDto {
 }
+exports.WeaponDto = WeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -43,17 +44,17 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], WeaponDto.prototype, "armType", void 0);
-exports.WeaponDto = WeaponDto;
 class CategoryWeaponDto {
 }
+exports.CategoryWeaponDto = CategoryWeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CategoryWeaponDto.prototype, "categoryName", void 0);
-exports.CategoryWeaponDto = CategoryWeaponDto;
 class signoutWeaponDto {
 }
+exports.signoutWeaponDto = signoutWeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -68,25 +69,25 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], signoutWeaponDto.prototype, "numRounds", void 0);
-exports.signoutWeaponDto = signoutWeaponDto;
 class approveWeaponDto {
 }
+exports.approveWeaponDto = approveWeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], approveWeaponDto.prototype, "weaponId", void 0);
-exports.approveWeaponDto = approveWeaponDto;
 class releaseWeaponDto {
 }
+exports.releaseWeaponDto = releaseWeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], releaseWeaponDto.prototype, "weaponId", void 0);
-exports.releaseWeaponDto = releaseWeaponDto;
 class retrieveWeaponDto {
 }
+exports.retrieveWeaponDto = retrieveWeaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -101,13 +102,12 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], retrieveWeaponDto.prototype, "note", void 0);
-exports.retrieveWeaponDto = retrieveWeaponDto;
 class weaponDto {
 }
+exports.weaponDto = weaponDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], weaponDto.prototype, "weaponId", void 0);
-exports.weaponDto = weaponDto;
 //# sourceMappingURL=weapons.dto.js.map

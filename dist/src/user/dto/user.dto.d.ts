@@ -2,7 +2,7 @@ export declare class RegisterDto {
     readonly name: string;
     readonly password: string;
     readonly serviceNumber: string;
-    readonly unit: string;
+    readonly unitId: string;
 }
 export declare class LoginDto {
     readonly serviceNumber: string;

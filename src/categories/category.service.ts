@@ -5,8 +5,6 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import * as bcrypt from "bcryptjs";
-import { JwtService } from "@nestjs/jwt";
 import { Category } from "./schema/category.schema";
 import { Unit, UnitDocument } from "./schema/unit.schema";
 import { CategoryDto } from "./dto/category.dto";

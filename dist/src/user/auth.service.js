@@ -19,23 +19,24 @@ const mongoose_2 = require("mongoose");
 const user_schema_1 = require("./schema/user.schema");
 const jwt_1 = require("@nestjs/jwt");
 const category_service_1 = require("../categories/category.service");
-const weapons_service_1 = require("../weapons/weapons.service");
+const criminal_service_1 = require("../criminal/criminal.service");
 const utils_1 = require("../utils/utils");
+const multer_1 = require("../utils/multer");
 let AuthService = class AuthService {
-    constructor(userModel, jwtService, categoryService, weaponsService) {
+    constructor(userModel, jwtService, categoryService, criminalService) {
         this.userModel = userModel;
         this.jwtService = jwtService;
         this.categoryService = categoryService;
-        this.weaponsService = weaponsService;
+        this.criminalService = criminalService;
     }
     async register(data) {
-        const { name, serviceNumber, unit, password } = data;
-        if (unit) {
+        const { name, serviceNumber, unitId, password } = data;
+        if (unitId) {
             const user = await this.userModel.findOne({ serviceNumber });
             if (user) {
                 throw new common_1.UnauthorizedException("Service Number already exists");
             }
-            const userUnit = await this.categoryService.findOneUnit(unit);
+            const userUnit = await this.categoryService.findOneUnit(unitId);
             const createUser = await this.userModel.create({
                 name,
                 password: utils_1.Hash.make(password),
@@ -43,7 +44,14 @@ let AuthService = class AuthService {
                 unit: userUnit._id,
                 categoryName: userUnit.category.name,
             });
-            return createUser;
+            return {
+                _id: createUser._id,
+                name: createUser.name,
+                serviceNumber: createUser.serviceNumber,
+                role: createUser.role,
+                unit: userUnit.name,
+                categoryName: userUnit.category.name
+            };
         }
         const createUser = await this.userModel.create({
             name: name,
@@ -51,13 +59,22 @@ let AuthService = class AuthService {
             serviceNumber: serviceNumber,
             role: user_schema_1.UserRole.SuperAdmin,
         });
-        return createUser;
+        return {
+            _id: createUser._id,
+            name: createUser.name,
+            serviceNumber: createUser.serviceNumber,
+            role: createUser.role,
+            unit: "Super Admin",
+            categoryName: "Super Admin"
+        };
     }
     async login(data) {
+        var _a;
         const { serviceNumber, password } = data;
         const user = await this.userModel
             .findOne({ serviceNumber })
-            .populate("unit");
+            .populate("unit")
+            .populate("unit.category");
         if (!user) {
             throw new common_1.UnauthorizedException("Invalid Credentials");
         }
@@ -71,32 +88,38 @@ let AuthService = class AuthService {
             role: user.role,
         };
         const token = this.jwtService.sign(payload);
-        return { token, user };
+        const response = {
+            _id: user._id,
+            name: user.name,
+            serviceNumber: user.serviceNumber,
+            role: user.role,
+            unit: (_a = user.unit.name) !== null && _a !== void 0 ? _a : "Super Admin",
+            categoryName: user.categoryName
+        };
+        return { token, response };
     }
     async appointDivisionComm(id, data) {
         const { userId } = data;
         const user = await this.userModel.findById(id);
         if (user.role === "Super Admin") {
             const user = await this.userModel.findById(userId);
-            if (user.categoryName === "Division") {
-                await this.userModel.findByIdAndUpdate(userId, {
-                    role: user_schema_1.UserRole.DivisionCommander,
-                });
-                return { message: "Successful" };
-            }
+            await this.userModel.findByIdAndUpdate(userId, {
+                role: user_schema_1.UserRole.DivisionCommander,
+                categoryName: "Division"
+            });
+            return { message: "Successful" };
         }
     }
     async appointBrigadeComm(id, data) {
         const { userId } = data;
         const user = await this.userModel.findById(id);
-        if (user.role === "Super Admin") {
+        if (user.role === "Super Admin" || user.role === "Division Commander") {
             const user = await this.userModel.findById(userId);
-            if (user.categoryName === "Brigade") {
-                await this.userModel.findByIdAndUpdate(userId, {
-                    role: user_schema_1.UserRole.BrigadeCommander,
-                });
-                return { message: "Successful" };
-            }
+            await this.userModel.findByIdAndUpdate(userId, {
+                role: user_schema_1.UserRole.BrigadeCommander,
+                categoryName: "Brigade"
+            });
+            return { message: "Successful" };
         }
     }
     async appointBattalionComm(id, data) {
@@ -108,59 +131,12 @@ let AuthService = class AuthService {
             const user = await this.userModel.findById(userId).populate("unit");
             await this.userModel.findByIdAndUpdate(userId, {
                 role: user_schema_1.UserRole.UnitCommander,
+                categoryName: "Battalion"
             });
             return {
                 message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
             };
         }
-    }
-    async appointAmourer(id, data) {
-        const { userId } = data;
-        const commProfile = await this.userModel.findById(id).populate("unit");
-        const user = await this.userModel.findById(userId).populate("unit");
-        if (commProfile.role === user_schema_1.UserRole.UnitCommander &&
-            commProfile.unit._id.toString() === user.unit._id.toString()) {
-            await this.userModel.findByIdAndUpdate(userId, {
-                role: user_schema_1.UserRole.Amourer,
-            });
-            return { message: "Successful" };
-        }
-    }
-    async registerWeapon(id, weaponData) {
-        const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === "Unit Commander") {
-            const commanderData = {
-                unitId: user.unit._id,
-            };
-            return await this.weaponsService.createWeapon(commanderData, weaponData);
-        }
-    }
-    async getWeapons(id, data) {
-        const user = await this.userModel.findById(id).populate("unit");
-        console.log(user.role);
-        if (user.role === "Unit Member" || user.role === "Amourer") {
-            const userData = {
-                unitId: user.unit._id,
-            };
-            return await this.weaponsService.getWeaponsByUnitMem(userData);
-        }
-        if (user.role === "Unit Commander" ||
-            user.role === "Brigade Commander" ||
-            user.role === "Division Commander") {
-            const commanderData = {
-                unitId: user.unit._id,
-            };
-            return await this.weaponsService.getWeaponsByComm(commanderData);
-        }
-    }
-    async signoutWeapon(id, data) {
-        const { weaponId, returnDate } = data;
-        const user = await this.userModel.findById(id).populate("unit");
-        const weapon = await this.weaponsService.getWeaponById(weaponId);
-        if (user.unit._id.toString() === weapon.unit._id.toString()) {
-            return await this.weaponsService.signoutWeapon(user, data);
-        }
-        throw new common_1.UnauthorizedException("Unauthorised");
     }
     async decodeToken(token) {
         try {
@@ -175,60 +151,55 @@ let AuthService = class AuthService {
     async getUserById(id) {
         return await this.userModel.findById(id).populate("unit");
     }
-    async weaponsAwaitApproval(id) {
-        const user = await this.userModel.findById(id).populate("unit");
-        return await this.weaponsService.weaponsAwaitApproval(user.unit._id);
-    }
-    async weaponsAwaitRelease(id) {
-        const user = await this.userModel.findById(id).populate("unit");
-        return await this.weaponsService.weaponsAwaitRelease(user.unit._id);
-    }
-    async releasedWeapons(id) {
-        const user = await this.userModel.findById(id).populate("unit");
-        return await this.weaponsService.releasedWeapons(user.unit._id);
-    }
-    async approveWeapon(id, data) {
-        const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === user_schema_1.UserRole.UnitCommander) {
-            return await this.weaponsService.approveWeapon(user, data);
-        }
-    }
-    async releaseWeapon(id, data) {
-        const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === user_schema_1.UserRole.Amourer) {
-            return await this.weaponsService.releaseWeapon(user, data);
-        }
-    }
-    async retrieveWeapon(id, data) {
-        const user = await this.userModel.findById(id).populate("unit");
-        if (user.role === user_schema_1.UserRole.Amourer) {
-            return await this.weaponsService.retrieveWeapon(user, data);
-        }
-    }
-    async weaponHistory(id) {
-        const user = await this.userModel.findById(id);
-        return await this.weaponsService.weaponHistory(user._id);
-    }
     async getAllUsers() {
         return await this.userModel.find();
     }
     async getAllUnitUsers(id) {
         const user = await this.userModel.findById(id).populate("unit");
-        return await this.userModel.find({ unit: user.unit._id });
+        const [unitMember, commanders] = await Promise.all([
+            this.userModel.find({ unit: user.unit._id }),
+            this.userModel.find({ role: { $in: [user_schema_1.UserRole.UnitCommander, user_schema_1.UserRole.DivisionCommander, user_schema_1.UserRole.BrigadeCommander] },
+            })
+        ]);
+        const response = user.role === user_schema_1.UserRole.UnitCommander || user.role === user_schema_1.UserRole.BrigadeCommander || user.role === user_schema_1.UserRole.DivisionCommander ? [...unitMember, ...commanders] : unitMember;
+        return response;
     }
-    async getWeaponByArmType(id, armType) {
+    async uploadFiles(files) {
+        try {
+            const mediaURLs = [];
+            if (!files) {
+                throw new common_1.NotAcceptableException('Upload an image');
+            }
+            const imageFiles = files.media;
+            if (!Array.isArray(imageFiles)) {
+                throw new common_1.NotAcceptableException('Expected an array of images');
+            }
+            const folderName = 'Criminal';
+            await Promise.all(imageFiles.map(async (data) => {
+                const upload = await (0, multer_1.uploadToCloudinary)(data, folderName);
+                mediaURLs.push(upload.secure_url);
+            }));
+            return { mediaURLs: mediaURLs };
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async createCriminal(data, id) {
         const user = await this.userModel.findById(id).populate("unit");
-        console.log(user.unit._id);
-        return await this.weaponsService.getWeaponByArmType(user.unit._id, armType);
+        return await this.criminalService.createCriminal(data, user);
+    }
+    async criminalRecords() {
+        return await this.criminalService.criminalRecords();
     }
 };
-AuthService = __decorate([
+exports.AuthService = AuthService;
+exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
         jwt_1.JwtService,
         category_service_1.CategoryService,
-        weapons_service_1.WeaponsService])
+        criminal_service_1.CriminalService])
 ], AuthService);
-exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

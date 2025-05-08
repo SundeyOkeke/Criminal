@@ -45,12 +45,12 @@ let CategoryService = class CategoryService {
         return findunit;
     }
 };
-CategoryService = __decorate([
+exports.CategoryService = CategoryService;
+exports.CategoryService = CategoryService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)("Category")),
     __param(1, (0, mongoose_1.InjectModel)("Unit")),
     __metadata("design:paramtypes", [mongoose_2.Model,
         mongoose_2.Model])
 ], CategoryService);
-exports.CategoryService = CategoryService;
 //# sourceMappingURL=category.service.js.map

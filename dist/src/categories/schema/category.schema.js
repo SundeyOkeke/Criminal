@@ -14,6 +14,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 let Category = class Category {
 };
+exports.Category = Category;
 __decorate([
     (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
@@ -22,9 +23,8 @@ __decorate([
     (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: "Unit" }] }),
     __metadata("design:type", Array)
 ], Category.prototype, "units", void 0);
-Category = __decorate([
+exports.Category = Category = __decorate([
     (0, mongoose_1.Schema)()
 ], Category);
-exports.Category = Category;
 exports.CategorySchema = mongoose_1.SchemaFactory.createForClass(Category);
 //# sourceMappingURL=category.schema.js.map
