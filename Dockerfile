@@ -44,4 +44,4 @@ RUN npm run build
 
 EXPOSE 8080
 
-CMD ["pm2-runtime", "dist/main.js"]
+CMD ["pm2-runtime", "dist/src/main.js"]
