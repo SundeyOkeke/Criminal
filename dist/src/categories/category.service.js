@@ -41,6 +41,7 @@ let CategoryService = class CategoryService {
         return await this.UnitModel.find().populate("category");
     }
     async findOneUnit(unit) {
+        console.log("unit", unit);
         const findunit = await this.UnitModel.findById(unit).populate("category");
         return findunit;
     }

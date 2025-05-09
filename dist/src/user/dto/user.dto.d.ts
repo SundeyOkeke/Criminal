@@ -14,3 +14,7 @@ export declare class AppointDto {
 export declare class userIdDto {
     readonly userId: string;
 }
+export declare class CreateReportDto {
+    readonly report: string;
+    readonly reportToIds: string[];
+}

@@ -15,6 +15,7 @@ const app_service_1 = require("./app.service");
 const auth_module_1 = require("./user/auth.module");
 const category_module_1 = require("./categories/category.module");
 const criminal_module_1 = require("./criminal/criminal.module");
+const chat_module_1 = require("./chat/chat.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +30,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             category_module_1.CategoryModule,
             criminal_module_1.CriminalModule,
+            chat_module_1.ChatModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

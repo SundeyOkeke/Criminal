@@ -4,17 +4,19 @@ import { Model } from "mongoose";
 import { User, UserRole } from "./schema/user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { CategoryService } from "src/categories/category.service";
-import { AppointDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointDto, CreateReportDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { CriminalService } from "src/criminal/criminal.service";
 import { Hash } from "src/utils/utils";
 import { uploadToCloudinary } from "src/utils/multer";
 import { CreateCriminalDto } from "src/criminal/dto/crimina.dto";
+import { Socket } from 'socket.io';
+import { WsException } from '@nestjs/websockets';
+
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name)
-    private userModel: Model<User>,
+    @InjectModel("User") private userModel: Model<User>,
     private jwtService: JwtService,
     private categoryService: CategoryService,
     private criminalService: CriminalService
@@ -75,6 +77,8 @@ export class AuthService {
       .populate("unit")
       .populate("unit.category");
 
+      console.log(user)
+
     if (!user) {
       throw new UnauthorizedException("Invalid Credentials");
     }
@@ -96,7 +100,7 @@ export class AuthService {
       name : user.name,
       serviceNumber : user.serviceNumber,
       role : user.role,
-      unit : user.unit.name ?? "Super Admin",
+      unit : user.unit?.name ?? "Super Admin",
       categoryName : user.categoryName
     }
 
@@ -145,9 +149,7 @@ export class AuthService {
         role: UserRole.UnitCommander,
         categoryName : "Battalion"
       });
-      return {
-        message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
-      };
+      return { message: "Successful" }
     }
   }
 
@@ -169,7 +171,7 @@ export class AuthService {
     return await this.userModel.find();
   }
 
-  async getAllUnitUsers(id) {
+  async getAllUnitUsers(id: string) {
     const user = await this.userModel.findById(id).populate("unit");
     const [unitMember, commanders] = await Promise.all([
       this.userModel.find({ unit: user.unit._id }),
@@ -177,7 +179,7 @@ export class AuthService {
       })
     ])
     const response = user.role === UserRole.UnitCommander || user.role === UserRole.BrigadeCommander || user.role === UserRole.DivisionCommander ? [...unitMember, ...commanders] : unitMember
-    return response
+    return response.filter((data) => data._id.toString() !== id.toString())
   }
 
   async uploadFiles(files) {
@@ -217,4 +219,40 @@ export class AuthService {
   async criminalRecords() {
     return await this.criminalService.criminalRecords()
   }
+
+  async getUserFromSocket(socket: Socket) {
+    let authHeader: any = socket.handshake.auth;
+
+    let auth_token =
+      authHeader.authorization ?? socket.handshake.headers.authorization;
+
+    if (!auth_token) {
+      throw new WsException('Unauthorised or Expired session');
+    }
+    auth_token = auth_token.split(' ')[1];
+
+    const user = await this.decodeToken(auth_token);
+
+    if (!user) {
+      throw new WsException('Invalid credentials.');
+    }
+
+    return user;
+  }
+
+  async criminalReport(data : CreateReportDto, id: string) {
+    const user = await this.getUserById(id)
+    const reportTo = await Promise.all(
+      data.reportToIds.map(async (reportToId) => {
+        const user = await this.getUserById(reportToId)
+        return user
+      })
+    )
+    return await this.criminalService.criminalReport(data.report, user, reportTo)
+  }
+
+  async getcriminalReport(id: string) {
+    return await this.criminalService.getcriminalReport(id)
+  }
+
 }

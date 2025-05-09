@@ -22,6 +22,7 @@ const category_service_1 = require("../categories/category.service");
 const criminal_service_1 = require("../criminal/criminal.service");
 const utils_1 = require("../utils/utils");
 const multer_1 = require("../utils/multer");
+const websockets_1 = require("@nestjs/websockets");
 let AuthService = class AuthService {
     constructor(userModel, jwtService, categoryService, criminalService) {
         this.userModel = userModel;
@@ -69,12 +70,13 @@ let AuthService = class AuthService {
         };
     }
     async login(data) {
-        var _a;
+        var _a, _b;
         const { serviceNumber, password } = data;
         const user = await this.userModel
             .findOne({ serviceNumber })
             .populate("unit")
             .populate("unit.category");
+        console.log(user);
         if (!user) {
             throw new common_1.UnauthorizedException("Invalid Credentials");
         }
@@ -93,7 +95,7 @@ let AuthService = class AuthService {
             name: user.name,
             serviceNumber: user.serviceNumber,
             role: user.role,
-            unit: (_a = user.unit.name) !== null && _a !== void 0 ? _a : "Super Admin",
+            unit: (_b = (_a = user.unit) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : "Super Admin",
             categoryName: user.categoryName
         };
         return { token, response };
@@ -133,9 +135,7 @@ let AuthService = class AuthService {
                 role: user_schema_1.UserRole.UnitCommander,
                 categoryName: "Battalion"
             });
-            return {
-                message: `${user.serviceNumber} successfully appointed as ${user.unit.name} Unit Commander `,
-            };
+            return { message: "Successful" };
         }
     }
     async decodeToken(token) {
@@ -162,7 +162,7 @@ let AuthService = class AuthService {
             })
         ]);
         const response = user.role === user_schema_1.UserRole.UnitCommander || user.role === user_schema_1.UserRole.BrigadeCommander || user.role === user_schema_1.UserRole.DivisionCommander ? [...unitMember, ...commanders] : unitMember;
-        return response;
+        return response.filter((data) => data._id.toString() !== id.toString());
     }
     async uploadFiles(files) {
         try {
@@ -192,11 +192,36 @@ let AuthService = class AuthService {
     async criminalRecords() {
         return await this.criminalService.criminalRecords();
     }
+    async getUserFromSocket(socket) {
+        var _a;
+        let authHeader = socket.handshake.auth;
+        let auth_token = (_a = authHeader.authorization) !== null && _a !== void 0 ? _a : socket.handshake.headers.authorization;
+        if (!auth_token) {
+            throw new websockets_1.WsException('Unauthorised or Expired session');
+        }
+        auth_token = auth_token.split(' ')[1];
+        const user = await this.decodeToken(auth_token);
+        if (!user) {
+            throw new websockets_1.WsException('Invalid credentials.');
+        }
+        return user;
+    }
+    async criminalReport(data, id) {
+        const user = await this.getUserById(id);
+        const reportTo = await Promise.all(data.reportToIds.map(async (reportToId) => {
+            const user = await this.getUserById(reportToId);
+            return user;
+        }));
+        return await this.criminalService.criminalReport(data.report, user, reportTo);
+    }
+    async getcriminalReport(id) {
+        return await this.criminalService.getcriminalReport(id);
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __param(0, (0, mongoose_1.InjectModel)("User")),
     __metadata("design:paramtypes", [mongoose_2.Model,
         jwt_1.JwtService,
         category_service_1.CategoryService,

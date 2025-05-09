@@ -9,7 +9,8 @@ import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./jwt.strategy";
 import { UserSchema } from "./schema/user.schema";
 import { CategoryModule } from "src/categories/category.module";
-
+import * as dotenv from "dotenv"
+dotenv.config()
 import { CriminalModule } from "src/criminal/criminal.module";
 
 @Module({
@@ -18,6 +19,7 @@ import { CriminalModule } from "src/criminal/criminal.module";
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        console.log("config", config.get<string>("JWT_SECRET"))
         return {
           secret: config.get<string>("JWT_SECRET"),
           signOptions: {
@@ -32,5 +34,6 @@ import { CriminalModule } from "src/criminal/criminal.module";
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports : [AuthService]
 })
 export class AuthModule {}

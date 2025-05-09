@@ -4,7 +4,7 @@ import { Unit } from "src/categories/schema/unit.schema";
 import { User } from "src/user/schema/user.schema";
 
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: { createdAt: true, updatedAt: true } })
 export class Criminal {
   @Prop({ required: true })
   name: string;
@@ -38,6 +38,12 @@ export class Criminal {
 
   @Prop({ type: SchemaTypes.ObjectId, ref: "User" })
   lockedBy:  User;
+
+  @Prop()
+  createdAt?: Date;
+
+  @Prop()
+  updatedAt?: Date;
 }
 
 export type CriminalDocument = Criminal & Document;

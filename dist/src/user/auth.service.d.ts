@@ -2,9 +2,10 @@ import { Model } from "mongoose";
 import { User, UserRole } from "./schema/user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { CategoryService } from "src/categories/category.service";
-import { AppointDto, LoginDto, RegisterDto } from "./dto/user.dto";
+import { AppointDto, CreateReportDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { CriminalService } from "src/criminal/criminal.service";
 import { CreateCriminalDto } from "src/criminal/dto/crimina.dto";
+import { Socket } from 'socket.io';
 export declare class AuthService {
     private userModel;
     private jwtService;
@@ -50,7 +51,7 @@ export declare class AuthService {
     } & {
         __v: number;
     })[]>;
-    getAllUnitUsers(id: any): Promise<(import("mongoose").Document<unknown, {}, User, {}> & User & {
+    getAllUnitUsers(id: string): Promise<(import("mongoose").Document<unknown, {}, User, {}> & User & {
         _id: import("mongoose").Types.ObjectId;
     } & {
         __v: number;
@@ -64,19 +65,7 @@ export declare class AuthService {
         __v: number;
     }>;
     criminalRecords(): Promise<{
-        unit: string;
-        lockedBy: string;
         _id: import("mongoose").Types.ObjectId;
-        $locals: Record<string, unknown>;
-        $op: "save" | "validate" | "remove" | null;
-        $where: Record<string, unknown>;
-        baseModelName?: string;
-        collection: import("mongoose").Collection;
-        db: import("mongoose").Connection;
-        errors?: import("mongoose").Error.ValidationError;
-        id?: any;
-        isNew: boolean;
-        schema: import("mongoose").Schema;
         name: string;
         dob: string;
         lockUpDate: string;
@@ -86,6 +75,17 @@ export declare class AuthService {
         address: string;
         phoneNumber: string;
         imageUrl: string;
-        __v: number;
+        unit: string;
+        lockedBy: string;
+        createdAt: Date;
+    }[]>;
+    getUserFromSocket(socket: Socket): Promise<any>;
+    criminalReport(data: CreateReportDto, id: string): Promise<User[]>;
+    getcriminalReport(id: string): Promise<{
+        _id: import("mongoose").Types.ObjectId;
+        report: string;
+        unit: string;
+        reportedBy: string;
+        date: Date;
     }[]>;
 }

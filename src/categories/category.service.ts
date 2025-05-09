@@ -47,6 +47,7 @@ export class CategoryService {
   }
 
   async findOneUnit(unit) {
+    console.log("unit", unit)
     const findunit = await this.UnitModel.findById(unit).populate("category");
     return findunit;
   }

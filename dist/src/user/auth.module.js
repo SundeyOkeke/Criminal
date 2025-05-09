@@ -17,6 +17,8 @@ const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./jwt.strategy");
 const user_schema_1 = require("./schema/user.schema");
 const category_module_1 = require("../categories/category.module");
+const dotenv = require("dotenv");
+dotenv.config();
 const criminal_module_1 = require("../criminal/criminal.module");
 let AuthModule = class AuthModule {
 };
@@ -28,6 +30,7 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
                 useFactory: (config) => {
+                    console.log("config", config.get("JWT_SECRET"));
                     return {
                         secret: config.get("JWT_SECRET"),
                         signOptions: {
@@ -42,6 +45,7 @@ exports.AuthModule = AuthModule = __decorate([
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
+        exports: [auth_service_1.AuthService]
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

@@ -50,19 +50,7 @@ export declare class AuthController {
         __v: number;
     })[]>;
     criminalRecords(): Promise<{
-        unit: string;
-        lockedBy: string;
         _id: import("mongoose").Types.ObjectId;
-        $locals: Record<string, unknown>;
-        $op: "save" | "validate" | "remove" | null;
-        $where: Record<string, unknown>;
-        baseModelName?: string;
-        collection: import("mongoose").Collection;
-        db: import("mongoose").Connection;
-        errors?: import("mongoose").Error.ValidationError;
-        id?: any;
-        isNew: boolean;
-        schema: import("mongoose").Schema;
         name: string;
         dob: string;
         lockUpDate: string;
@@ -72,7 +60,9 @@ export declare class AuthController {
         address: string;
         phoneNumber: string;
         imageUrl: string;
-        __v: number;
+        unit: string;
+        lockedBy: string;
+        createdAt: Date;
     }[]>;
     createCriminal(data: CreateCriminalDto, req: any): Promise<import("mongoose").Document<unknown, {}, import("../criminal/schema/criminal.schema").Criminal, {}> & import("../criminal/schema/criminal.schema").Criminal & {
         _id: import("mongoose").Types.ObjectId;

@@ -3,6 +3,8 @@ import * as sharp from 'sharp';
 import { Multer } from 'multer';
 import { ConfigService } from '@nestjs/config';
 import { NotAcceptableException } from '@nestjs/common';
+import * as dotenv from "dotenv"
+dotenv.config()
 
 const configService = new ConfigService();
 cloudinary.config({

@@ -7,10 +7,11 @@ import mongoose from "mongoose";
 import { config } from "process";
 import { CriminalSchema } from "./schema/criminal.schema";
 import { CriminalService } from "./criminal.service";
+import { CriminalReportSchema } from "./schema/criminalRecord.schema";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: "Criminal", schema: CriminalSchema }]),
+    MongooseModule.forFeature([{ name: "Criminal", schema: CriminalSchema }, { name: "CriminalReport", schema: CriminalReportSchema }]),
   ],
   exports: [CriminalService],
   providers: [CriminalService],

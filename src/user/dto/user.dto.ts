@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEmail, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, IsEmail, MinLength, IsUUID, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class RegisterDto {
@@ -49,4 +49,17 @@ export class userIdDto {
   @IsString()
   @IsNotEmpty()
   readonly userId: string;
+}
+
+export class CreateReportDto {
+  @ApiProperty({ example: "This is a report description." })
+  @IsString()
+  @IsNotEmpty()
+  readonly report: string;
+
+  @ApiProperty({ example: ["550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440001"] })
+  @IsArray()
+  @IsNotEmpty()
+  @IsUUID("4", { each: true })
+  readonly reportToIds: string[];
 }

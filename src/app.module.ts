@@ -6,6 +6,7 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./user/auth.module";
 import { CategoryModule } from "./categories/category.module";
 import { CriminalModule } from "./criminal/criminal.module";
+import { ChatModule } from "./chat/chat.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CriminalModule } from "./criminal/criminal.module";
     AuthModule,
     CategoryModule,
     CriminalModule,
+    ChatModule
   ],
   controllers: [AppController],
   providers: [AppService],

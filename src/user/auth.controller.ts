@@ -105,7 +105,7 @@ export class AuthController {
   @Post("criminal-record")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: "Get all unit users" })
+  @ApiOperation({ summary: "Create Criminal Record" })
   @ApiResponse({ status: 200, description: "List of unit users." })
   createCriminal(@Body() data: CreateCriminalDto,@Req() req) {
     const id: string = req.user.id;
