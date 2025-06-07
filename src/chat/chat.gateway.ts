@@ -12,7 +12,17 @@ import { AuthService } from 'src/user/auth.service';
 import { CreateReportDto } from 'src/user/dto/user.dto';
 
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: '*', // Adjust as needed
+  },
+  perMessageDeflate: {
+    threshold: 1024, // Compress messages > 1KB
+    zlibDeflateOptions: {
+      level: 3, // Compression level (1-9, lower = faster)
+    },
+  },
+})
 export class ChatGateway implements OnGatewayConnection {
   private readonly connectedUsers: Map<string, Socket> = new Map();
 
