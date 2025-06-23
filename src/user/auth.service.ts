@@ -174,9 +174,9 @@ export class AuthService {
   async getAllUnitUsers(id: string) {
     const user = await this.userModel.findById(id).populate("unit");
     const [unitMember, commanders] = await Promise.all([
-      this.userModel.find({ unit: user.unit._id }),
+      this.userModel.find({ unit: user.unit._id }).populate("unit"),
       this.userModel.find({   role: { $in: [UserRole.UnitCommander, UserRole.DivisionCommander, UserRole.BrigadeCommander] },
-      })
+      }).populate("unit")
     ])
     const response = user.role === UserRole.UnitCommander || user.role === UserRole.BrigadeCommander || user.role === UserRole.DivisionCommander ? [...unitMember, ...commanders] : unitMember
     return response.filter((data) => data._id.toString() !== id.toString())

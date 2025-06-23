@@ -68,11 +68,13 @@ export class ChatGateway implements OnGatewayConnection {
   async getcriminalReport(id: string) {
     const report = await this.authService.getcriminalReport(id)
     const socket = this.connectedUsers.get(id.toString());
-    if (socket) {
-      socket.emit('report', report);
+    if (!socket) {
+      console.log("Not active user")
+      return null
     }
-
-
+    console.log("Active user")
+  socket.emit('report', report);
+  return 
   }
 
   @SubscribeMessage('send_report')
@@ -81,9 +83,11 @@ export class ChatGateway implements OnGatewayConnection {
     @MessageBody() data: CreateReportDto,
   ) {
     try {
+      console.log("Going in")
       const senderUser =
         await this.authService.getUserFromSocket(senderSocket);
       const reports = await this.authService.criminalReport(data, senderUser.id)
+      console.log("Im here")
       await Promise.all(
         reports.map((report) => {
           this.getcriminalReport(report._id)

@@ -63,3 +63,4 @@ export class CreateReportDto {
   @IsUUID("4", { each: true })
   readonly reportToIds: string[];
 }
+
