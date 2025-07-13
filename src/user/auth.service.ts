@@ -102,7 +102,7 @@ export class AuthService {
       name : user.name,
       serviceNumber : user.serviceNumber,
       role : user.role,
-      userType : user.userType,
+      userType : user.userType ?? "Military",
       unit : user.unit?.name ?? "Super Admin",
       categoryName : user.categoryName
     }
