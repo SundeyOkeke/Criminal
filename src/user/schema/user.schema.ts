@@ -28,6 +28,9 @@ export class User {
   @Prop({ required: false })
   categoryName: string;
 
+  @Prop({ required: false })
+  userType: string;
+
   @Prop({ enum: UserRole, default: UserRole.UnitMember })
   role: UserRole;
   _id: any | User;

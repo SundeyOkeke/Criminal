@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   async register(data: RegisterDto) {
-    const { name, serviceNumber, unitId, password } = data;
+    const { name, serviceNumber, unitId, password, userType } = data;
 
     if (unitId) {
       //check if email already exists
@@ -40,11 +40,13 @@ export class AuthService {
         serviceNumber,
         unit: userUnit._id,
         categoryName: (userUnit.category as { name: string }).name,
+        userType : userType
       });
 
       return {
         _id : createUser._id,
         name : createUser.name,
+        userType : createUser.userType,
         serviceNumber : createUser.serviceNumber,
         role : createUser.role,
         unit : userUnit.name,
@@ -100,6 +102,7 @@ export class AuthService {
       name : user.name,
       serviceNumber : user.serviceNumber,
       role : user.role,
+      userType : user.userType,
       unit : user.unit?.name ?? "Super Admin",
       categoryName : user.categoryName
     }
