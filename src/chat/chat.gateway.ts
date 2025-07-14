@@ -94,6 +94,10 @@ export class ChatGateway implements OnGatewayConnection {
         })
       )
 
+      const socket = this.connectedUsers.get(senderUser.id.toString());
+      socket.emit("success_response", "Message Sent Successfully")
+
+
     } catch (error) {
       console.error(error);
       throw new WsException('Error processing message');
